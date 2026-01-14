@@ -284,5 +284,6 @@ export const DASHBOARD_NAV: NavItem[] = [
 // Fecha de elecciones
 export const FECHA_ELECCIONES = new Date('2026-04-12T08:00:00');
 
-// API URL (se debe configurar en .env)
-export const API_URL = import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL || '';
+// API URL - Google Apps Script
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKLcr0Ig6zpMBdplm5_zGidxzxy5fAEuC4l9teM2dTlYbbjVODh3GhhoOAEsG7vIpkfA/exec';
+export const API_URL = import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL || GOOGLE_APPS_SCRIPT_URL;
