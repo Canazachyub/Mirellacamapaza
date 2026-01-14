@@ -14,9 +14,10 @@ import type {
 } from '@/types';
 
 // URL de la API - usa proxy en desarrollo, URL directa en producción
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKLcr0Ig6zpMBdplm5_zGidxzxy5fAEuC4l9teM2dTlYbbjVODh3GhhoOAEsG7vIpkfA/exec';
 const API_URL = import.meta.env.DEV
   ? '/api'
-  : import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL;
+  : (import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL || GOOGLE_APPS_SCRIPT_URL);
 
 // Helper para hacer peticiones GET con fetch (compatible con Google Apps Script)
 const get = async <T>(action: string, params?: Record<string, string>): Promise<ApiResponse<T>> => {
