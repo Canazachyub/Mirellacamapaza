@@ -48,3 +48,4 @@ coverage/
 .stylelintcache
 *.pem
 Thumbs.db
+tmpclaude-*
