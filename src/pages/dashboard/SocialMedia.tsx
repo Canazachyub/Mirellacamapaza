@@ -9,19 +9,44 @@ import {
   Heart,
   MessageCircle,
   Share2,
+  User,
+  Building2,
+  Award,
 } from 'lucide-react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, Button } from '@/components/common';
 import { REDES_SOCIALES } from '@/utils/constants';
 
-// Configuración de redes sociales
-const SOCIAL_CONFIG = {
-  facebook: {
-    pageUrl: REDES_SOCIALES.facebook.url,
-    pageName: 'ahoranacionilave',
-    embedWidth: 500,
-    embedHeight: 600,
+// Configuración de páginas de Facebook
+const FACEBOOK_PAGES = [
+  {
+    id: 'doctora',
+    name: 'Dra. Mirella Camapaza',
+    description: 'Página oficial de campaña',
+    url: 'https://www.facebook.com/DraMirellaCamapazaAhoraNacion/',
+    icon: Award,
+    color: 'bg-primary-100 text-primary-600',
   },
+  {
+    id: 'partido',
+    name: 'Ahora Nación Ilave',
+    description: 'Página del partido',
+    url: REDES_SOCIALES.facebook.url,
+    icon: Building2,
+    color: 'bg-blue-100 text-blue-600',
+  },
+  {
+    id: 'personal',
+    name: 'Mirella Personal',
+    description: 'Perfil personal',
+    url: 'https://www.facebook.com/dramirellacamapaza/',
+    icon: User,
+    color: 'bg-purple-100 text-purple-600',
+  },
+];
+
+// Configuración de otras redes sociales
+const SOCIAL_CONFIG = {
   instagram: {
     profileUrl: REDES_SOCIALES.instagram.url,
     username: 'dramirellacamapaza',
@@ -32,8 +57,14 @@ const SOCIAL_CONFIG = {
   },
 };
 
+const EMBED_CONFIG = {
+  width: 500,
+  height: 600,
+};
+
 const SocialMedia = () => {
   const [activeTab, setActiveTab] = useState<'facebook' | 'instagram' | 'tiktok'>('facebook');
+  const [activeFacebookPage, setActiveFacebookPage] = useState('doctora');
   const [refreshKey, setRefreshKey] = useState(0);
 
   const handleRefresh = () => {
@@ -46,6 +77,8 @@ const SocialMedia = () => {
     { id: 'tiktok' as const, label: 'TikTok', icon: Music2, color: 'text-gray-900 bg-gray-100' },
   ];
 
+  const currentFacebookPage = FACEBOOK_PAGES.find(p => p.id === activeFacebookPage) || FACEBOOK_PAGES[0];
+
   return (
     <DashboardLayout>
       {/* Header */}
@@ -54,79 +87,67 @@ const SocialMedia = () => {
         <p className="text-secondary-600">Monitorea tus redes sociales desde un solo lugar</p>
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-            <Facebook className="w-6 h-6 text-blue-600" />
-          </div>
-          <div>
-            <p className="text-sm text-secondary-500">Facebook</p>
-            <a
-              href={SOCIAL_CONFIG.facebook.pageUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-secondary-900 hover:text-primary-600 flex items-center gap-1"
-            >
-              Ver página <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-        </Card>
+      {/* Quick Stats - All Facebook Pages */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+        {FACEBOOK_PAGES.map((page) => {
+          const Icon = page.icon;
+          return (
+            <Card key={page.id} className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${page.color}`}>
+                <Icon className="w-5 h-5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-secondary-500 truncate">{page.description}</p>
+                <a
+                  href={page.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-semibold text-secondary-900 hover:text-primary-600 flex items-center gap-1 truncate"
+                >
+                  {page.name} <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                </a>
+              </div>
+            </Card>
+          );
+        })}
 
-        <Card className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
-            <Instagram className="w-6 h-6 text-pink-600" />
+        <Card className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center">
+            <Instagram className="w-5 h-5 text-pink-600" />
           </div>
-          <div>
-            <p className="text-sm text-secondary-500">Instagram</p>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-secondary-500">Instagram</p>
             <a
               href={SOCIAL_CONFIG.instagram.profileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-secondary-900 hover:text-primary-600 flex items-center gap-1"
+              className="text-sm font-semibold text-secondary-900 hover:text-primary-600 flex items-center gap-1"
             >
               @{SOCIAL_CONFIG.instagram.username} <ExternalLink className="w-3 h-3" />
             </a>
           </div>
         </Card>
 
-        <Card className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-            <Music2 className="w-6 h-6 text-gray-900" />
+        <Card className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+            <Music2 className="w-5 h-5 text-gray-900" />
           </div>
-          <div>
-            <p className="text-sm text-secondary-500">TikTok</p>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-secondary-500">TikTok</p>
             <a
               href={SOCIAL_CONFIG.tiktok.profileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-secondary-900 hover:text-primary-600 flex items-center gap-1"
+              className="text-sm font-semibold text-secondary-900 hover:text-primary-600 flex items-center gap-1"
             >
               @{SOCIAL_CONFIG.tiktok.username} <ExternalLink className="w-3 h-3" />
             </a>
           </div>
         </Card>
-
-        <Card className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-            <Users className="w-6 h-6 text-green-600" />
-          </div>
-          <div>
-            <p className="text-sm text-secondary-500">Grupo WhatsApp</p>
-            <a
-              href={REDES_SOCIALES.whatsappGrupo.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-secondary-900 hover:text-primary-600 flex items-center gap-1"
-            >
-              Voluntariado <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-        </Card>
       </div>
 
-      {/* Tabs */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      {/* Main Tabs */}
+      <div className="flex flex-wrap gap-2 mb-4">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           return (
@@ -155,6 +176,29 @@ const SocialMedia = () => {
         </Button>
       </div>
 
+      {/* Facebook Sub-tabs */}
+      {activeTab === 'facebook' && (
+        <div className="flex flex-wrap gap-2 mb-6">
+          {FACEBOOK_PAGES.map((page) => {
+            const Icon = page.icon;
+            return (
+              <button
+                key={page.id}
+                onClick={() => setActiveFacebookPage(page.id)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  activeFacebookPage === page.id
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {page.name}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {/* Content */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Feed */}
@@ -162,13 +206,13 @@ const SocialMedia = () => {
           <Card>
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-secondary-900">
-                {activeTab === 'facebook' && 'Feed de Facebook'}
+                {activeTab === 'facebook' && `Facebook - ${currentFacebookPage.name}`}
                 {activeTab === 'instagram' && 'Perfil de Instagram'}
                 {activeTab === 'tiktok' && 'Perfil de TikTok'}
               </h3>
               <a
                 href={
-                  activeTab === 'facebook' ? SOCIAL_CONFIG.facebook.pageUrl :
+                  activeTab === 'facebook' ? currentFacebookPage.url :
                   activeTab === 'instagram' ? SOCIAL_CONFIG.instagram.profileUrl :
                   SOCIAL_CONFIG.tiktok.profileUrl
                 }
@@ -183,15 +227,15 @@ const SocialMedia = () => {
 
             {/* Facebook Embed */}
             {activeTab === 'facebook' && (
-              <div key={`fb-${refreshKey}`} className="flex justify-center">
+              <div key={`fb-${activeFacebookPage}-${refreshKey}`} className="flex justify-center">
                 <iframe
-                  src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(SOCIAL_CONFIG.facebook.pageUrl)}&tabs=timeline&width=${SOCIAL_CONFIG.facebook.embedWidth}&height=${SOCIAL_CONFIG.facebook.embedHeight}&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`}
-                  width={SOCIAL_CONFIG.facebook.embedWidth}
-                  height={SOCIAL_CONFIG.facebook.embedHeight}
+                  src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(currentFacebookPage.url)}&tabs=timeline&width=${EMBED_CONFIG.width}&height=${EMBED_CONFIG.height}&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`}
+                  width={EMBED_CONFIG.width}
+                  height={EMBED_CONFIG.height}
                   style={{ border: 'none', overflow: 'hidden' }}
                   allowFullScreen
                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                  title="Facebook Page"
+                  title={`Facebook Page - ${currentFacebookPage.name}`}
                 />
               </div>
             )}
@@ -282,6 +326,32 @@ const SocialMedia = () => {
 
         {/* Sidebar */}
         <div className="space-y-6">
+          {/* All Facebook Pages Links */}
+          <Card>
+            <h3 className="font-semibold text-secondary-900 mb-4">Páginas de Facebook</h3>
+            <div className="space-y-3">
+              {FACEBOOK_PAGES.map((page) => {
+                const Icon = page.icon;
+                return (
+                  <a
+                    key={page.id}
+                    href={page.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`flex items-center gap-3 p-3 rounded-lg hover:opacity-80 transition-opacity ${page.color.replace('text-', 'bg-').split(' ')[0]}`}
+                  >
+                    <Icon className={`w-5 h-5 ${page.color.split(' ')[1]}`} />
+                    <div className="flex-1">
+                      <span className="text-sm font-medium text-secondary-900 block">{page.name}</span>
+                      <span className="text-xs text-secondary-500">{page.description}</span>
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-secondary-400" />
+                  </a>
+                );
+              })}
+            </div>
+          </Card>
+
           {/* Quick Links */}
           <Card>
             <h3 className="font-semibold text-secondary-900 mb-4">Accesos Rápidos</h3>
@@ -316,6 +386,16 @@ const SocialMedia = () => {
                 <span className="text-sm font-medium text-secondary-900">TikTok Creator Center</span>
                 <ExternalLink className="w-4 h-4 text-secondary-400 ml-auto" />
               </a>
+              <a
+                href={REDES_SOCIALES.whatsappGrupo.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+              >
+                <Users className="w-5 h-5 text-green-600" />
+                <span className="text-sm font-medium text-secondary-900">Grupo de Voluntariado</span>
+                <ExternalLink className="w-4 h-4 text-secondary-400 ml-auto" />
+              </a>
             </div>
           </Card>
 
@@ -340,17 +420,6 @@ const SocialMedia = () => {
                 Los videos cortos tienen más alcance en TikTok e Instagram Reels
               </li>
             </ul>
-          </Card>
-
-          {/* Upgrade Notice */}
-          <Card className="bg-gradient-to-br from-primary-50 to-primary-100 border-primary-200">
-            <h3 className="font-semibold text-primary-900 mb-2">¿Quieres más funciones?</h3>
-            <p className="text-sm text-primary-700 mb-4">
-              Para ver comentarios, notificaciones y métricas en tiempo real, necesitas integrar las APIs oficiales de cada plataforma.
-            </p>
-            <p className="text-xs text-primary-600">
-              Contacta al desarrollador para configurar Meta Graph API y TikTok API.
-            </p>
           </Card>
         </div>
       </div>
