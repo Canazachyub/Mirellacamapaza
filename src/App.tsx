@@ -27,6 +27,7 @@ const DashboardEvents = lazy(() => import('@/pages/dashboard/Events'));
 const DashboardReports = lazy(() => import('@/pages/dashboard/Reports'));
 const DashboardSettings = lazy(() => import('@/pages/dashboard/Settings'));
 const DashboardGallery = lazy(() => import('@/pages/dashboard/Gallery'));
+const DashboardSocialMedia = lazy(() => import('@/pages/dashboard/SocialMedia'));
 
 // Loading component
 const PageLoader = () => (
@@ -141,6 +142,14 @@ function App() {
           element={
             <ProtectedRoute>
               <DashboardGallery />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/redes"
+          element={
+            <ProtectedRoute>
+              <DashboardSocialMedia />
             </ProtectedRoute>
           }
         />

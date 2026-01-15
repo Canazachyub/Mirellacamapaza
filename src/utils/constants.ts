@@ -277,6 +277,7 @@ export const DASHBOARD_NAV: NavItem[] = [
   { label: 'Galería', href: '/admin/galeria', icon: 'Image' },
   { label: 'Equipos', href: '/admin/equipos', icon: 'UsersRound' },
   { label: 'Eventos', href: '/admin/eventos', icon: 'Calendar' },
+  { label: 'Redes Sociales', href: '/admin/redes', icon: 'Share2' },
   { label: 'Reportes', href: '/admin/reportes', icon: 'BarChart3' },
   { label: 'Configuración', href: '/admin/configuracion', icon: 'Settings' },
 ];

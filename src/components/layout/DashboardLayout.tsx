@@ -15,6 +15,7 @@ import {
   LogOut,
   ChevronLeft,
   Image,
+  Share2,
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { useAuthStore } from '@/store/authStore';
@@ -32,6 +33,7 @@ const iconMap: Record<string, React.ElementType> = {
   BarChart3,
   Settings,
   Image,
+  Share2,
 };
 
 interface DashboardLayoutProps {
