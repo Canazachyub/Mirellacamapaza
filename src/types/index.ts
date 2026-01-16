@@ -59,6 +59,20 @@ export interface Team {
   Estado: 'Activo' | 'Inactivo';
 }
 
+// Tarea Diaria
+export interface Task {
+  ID: string;
+  Fecha: string;              // YYYY-MM-DD
+  Titulo: string;
+  EquipoID: string;
+  EquipoNombre?: string;
+  AsignadoA: string;          // ID del voluntario o "EQUIPO" para todo el equipo
+  AsignadoNombre: string;
+  Completado: boolean;
+  FechaCompletado?: string;
+  FechaCreacion: string;
+}
+
 // Evento
 export interface Event {
   ID: string;

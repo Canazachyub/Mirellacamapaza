@@ -4,6 +4,7 @@ import type {
   Message,
   Volunteer,
   Team,
+  Task,
   Event,
   Stats,
   FilesResponse,
@@ -178,6 +179,54 @@ export const updateTeam = (id: string, data: Partial<Team>) =>
   post<void>('updateTeam', { id, ...data });
 
 export const deleteTeam = (id: string) => post<void>('deleteTeam', { id });
+
+// ============================================
+// VOLUNTARIOS DE EQUIPO
+// ============================================
+
+export const getTeamVolunteers = (teamId: string) =>
+  get<Volunteer[]>('getTeamVolunteers', { teamId });
+
+export const addVolunteerToTeam = (volunteerId: string, teamId: string, teamName: string) =>
+  post<void>('addVolunteerToTeam', { volunteerId, teamId, teamName });
+
+export const removeVolunteerFromTeam = (volunteerId: string) =>
+  post<void>('removeVolunteerFromTeam', { volunteerId });
+
+// ============================================
+// TAREAS DIARIAS
+// ============================================
+
+export interface GetTasksParams {
+  equipoId?: string;
+  fecha?: string;        // YYYY-MM-DD, por defecto hoy
+  asignadoA?: string;    // ID del voluntario
+}
+
+export const getTasks = (params?: GetTasksParams) => {
+  const queryParams: Record<string, string> = {};
+  if (params?.equipoId) queryParams.equipoId = params.equipoId;
+  if (params?.fecha) queryParams.fecha = params.fecha;
+  if (params?.asignadoA) queryParams.asignadoA = params.asignadoA;
+  return get<Task[]>('getTasks', queryParams);
+};
+
+export const addTask = (data: {
+  titulo: string;
+  equipoId: string;
+  equipoNombre: string;
+  asignadoA: string;      // ID del voluntario o "EQUIPO"
+  asignadoNombre: string;
+  fecha?: string;         // Opcional, por defecto hoy en backend
+}) => post<{ id: string }>('addTask', data);
+
+export const updateTask = (id: string, data: Partial<Task>) =>
+  post<void>('updateTask', { id, ...data });
+
+export const toggleTaskComplete = (id: string, completado: boolean) =>
+  post<void>('toggleTaskComplete', { id, completado });
+
+export const deleteTask = (id: string) => post<void>('deleteTask', { id });
 
 // ============================================
 // EVENTOS
