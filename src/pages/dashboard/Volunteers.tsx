@@ -367,7 +367,7 @@ const Volunteers = () => {
                   <Briefcase className="w-4 h-4" />
                   <span className="text-sm font-medium">Área de Interés</span>
                 </div>
-                <p className="font-semibold text-primary-900">{selectedVolunteer.Area}</p>
+                <p className="font-semibold text-primary-900">{selectedVolunteer.AreasInteres || selectedVolunteer.Area || 'No especificado'}</p>
               </div>
 
               <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">

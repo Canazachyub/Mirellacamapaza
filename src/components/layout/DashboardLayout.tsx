@@ -16,6 +16,7 @@ import {
   ChevronLeft,
   Image,
   Share2,
+  Brain,
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { useAuthStore } from '@/store/authStore';
@@ -34,6 +35,7 @@ const iconMap: Record<string, React.ElementType> = {
   Settings,
   Image,
   Share2,
+  Brain,
 };
 
 interface DashboardLayoutProps {

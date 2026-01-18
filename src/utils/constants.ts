@@ -278,6 +278,7 @@ export const DASHBOARD_NAV: NavItem[] = [
   { label: 'Equipos', href: '/admin/equipos', icon: 'UsersRound' },
   { label: 'Eventos', href: '/admin/eventos', icon: 'Calendar' },
   { label: 'Redes Sociales', href: '/admin/redes', icon: 'Share2' },
+  { label: 'Sentimientos', href: '/admin/sentimientos', icon: 'Brain' },
   { label: 'Reportes', href: '/admin/reportes', icon: 'BarChart3' },
   { label: 'Configuración', href: '/admin/configuracion', icon: 'Settings' },
 ];
@@ -286,5 +287,5 @@ export const DASHBOARD_NAV: NavItem[] = [
 export const FECHA_ELECCIONES = new Date('2026-04-12T08:00:00');
 
 // API URL - Google Apps Script
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKLcr0Ig6zpMBdplm5_zGidxzxy5fAEuC4l9teM2dTlYbbjVODh3GhhoOAEsG7vIpkfA/exec';
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwR-81-k1CHOJIqL3CeRaK3Zx2i7ceht3pR-tJIP8-mNCNvr4dYdq2P1M0y69VsafnJ-Q/exec';
 export const API_URL = import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL || GOOGLE_APPS_SCRIPT_URL;

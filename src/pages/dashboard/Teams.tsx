@@ -81,15 +81,15 @@ const Teams = () => {
 
   // Query: Voluntarios del equipo seleccionado
   const { data: teamVolunteersResponse, isLoading: isLoadingTeamVolunteers } = useQuery({
-    queryKey: ['teamVolunteers', selectedTeam?.ID],
-    queryFn: () => getTeamVolunteers(selectedTeam!.ID),
+    queryKey: ['teamVolunteers', selectedTeam?.ID, selectedTeam?.Nombre],
+    queryFn: () => getTeamVolunteers(selectedTeam!.ID, selectedTeam!.Nombre),
     enabled: !!selectedTeam,
   });
 
   // Query: Tareas del equipo seleccionado
   const { data: tasksResponse, isLoading: isLoadingTasks } = useQuery({
-    queryKey: ['tasks', selectedTeam?.ID, selectedDate],
-    queryFn: () => getTasks({ equipoId: selectedTeam!.ID, fecha: selectedDate }),
+    queryKey: ['tasks', selectedTeam?.ID, selectedTeam?.Nombre, selectedDate],
+    queryFn: () => getTasks({ equipoId: selectedTeam!.ID, equipoNombre: selectedTeam!.Nombre, fecha: selectedDate }),
     enabled: !!selectedTeam && activeTab === 'tasks',
   });
 
@@ -259,17 +259,24 @@ const Teams = () => {
       return;
     }
 
-    const teamVolunteers = teamVolunteersResponse?.data || [];
-    const assignee = taskAssignee === 'EQUIPO'
-      ? { id: 'EQUIPO', name: 'Todo el equipo' }
-      : teamVolunteers.find(v => v.ID === taskAssignee);
+    const teamVolunteersList = teamVolunteersResponse?.data || [];
+    let asignadoNombre = 'Todo el equipo';
+
+    if (taskAssignee !== 'EQUIPO') {
+      const volunteer = teamVolunteersList.find(v => v.ID === taskAssignee);
+      if (volunteer) {
+        asignadoNombre = `${volunteer.Nombre} ${volunteer.Apellidos || ''}`.trim();
+      } else {
+        asignadoNombre = 'Sin asignar';
+      }
+    }
 
     addTaskMutation.mutate({
       titulo: taskTitle,
       equipoId: selectedTeam!.ID,
       equipoNombre: selectedTeam!.Nombre,
       asignadoA: taskAssignee,
-      asignadoNombre: assignee?.name || `${(assignee as Volunteer)?.Nombre} ${(assignee as Volunteer)?.Apellidos || ''}`.trim(),
+      asignadoNombre: asignadoNombre,
       fecha: selectedDate,
     });
   };
@@ -528,7 +535,7 @@ const Teams = () => {
                           {task.Titulo}
                         </p>
                         <p className="text-sm text-secondary-500">
-                          Asignado a: {task.AsignadoNombre}
+                          Asignado a: {task.AsignadoNombre || (task.AsignadoA === 'EQUIPO' ? 'Todo el equipo' : 'Sin asignar')}
                         </p>
                       </div>
                     </div>

@@ -12,13 +12,13 @@ import type {
   AffiliateFormData,
   VolunteerFormData,
   ContactFormData,
+  Sentiment,
+  GeminiResponse,
 } from '@/types';
 
-// URL de la API - usa proxy en desarrollo, URL directa en producción
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKLcr0Ig6zpMBdplm5_zGidxzxy5fAEuC4l9teM2dTlYbbjVODh3GhhoOAEsG7vIpkfA/exec';
-const API_URL = import.meta.env.DEV
-  ? '/api'
-  : (import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL || GOOGLE_APPS_SCRIPT_URL);
+// URL de la API - siempre usa URL directa (Google Apps Script maneja CORS)
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwR-81-k1CHOJIqL3CeRaK3Zx2i7ceht3pR-tJIP8-mNCNvr4dYdq2P1M0y69VsafnJ-Q/exec';
+const API_URL = import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL || GOOGLE_APPS_SCRIPT_URL;
 
 // Helper para hacer peticiones GET con fetch (compatible con Google Apps Script)
 const get = async <T>(action: string, params?: Record<string, string>): Promise<ApiResponse<T>> => {
@@ -184,8 +184,8 @@ export const deleteTeam = (id: string) => post<void>('deleteTeam', { id });
 // VOLUNTARIOS DE EQUIPO
 // ============================================
 
-export const getTeamVolunteers = (teamId: string) =>
-  get<Volunteer[]>('getTeamVolunteers', { teamId });
+export const getTeamVolunteers = (teamId: string, teamName: string) =>
+  get<Volunteer[]>('getTeamVolunteers', { teamId, teamName });
 
 export const addVolunteerToTeam = (volunteerId: string, teamId: string, teamName: string) =>
   post<void>('addVolunteerToTeam', { volunteerId, teamId, teamName });
@@ -199,6 +199,7 @@ export const removeVolunteerFromTeam = (volunteerId: string) =>
 
 export interface GetTasksParams {
   equipoId?: string;
+  equipoNombre?: string;
   fecha?: string;        // YYYY-MM-DD, por defecto hoy
   asignadoA?: string;    // ID del voluntario
 }
@@ -206,6 +207,7 @@ export interface GetTasksParams {
 export const getTasks = (params?: GetTasksParams) => {
   const queryParams: Record<string, string> = {};
   if (params?.equipoId) queryParams.equipoId = params.equipoId;
+  if (params?.equipoNombre) queryParams.equipoNombre = params.equipoNombre;
   if (params?.fecha) queryParams.fecha = params.fecha;
   if (params?.asignadoA) queryParams.asignadoA = params.asignadoA;
   return get<Task[]>('getTasks', queryParams);
@@ -297,3 +299,47 @@ export const updateConfig = (key: string, value: string, description?: string) =
 
 export const validateLogin = (password: string) =>
   get<{ message: string }>('validateLogin', { password });
+
+// ============================================
+// SENTIMIENTOS (Análisis de Redes Sociales)
+// ============================================
+
+export interface GetSentimentsParams {
+  page?: number;
+  limit?: number;
+  sentimiento?: 'positivo' | 'negativo' | 'neutro';
+  categoria?: string;
+  nivelRiesgo?: string;
+  search?: string;
+}
+
+export const getSentiments = (params?: GetSentimentsParams) => {
+  const queryParams: Record<string, string> = {};
+  if (params?.page) queryParams.page = String(params.page);
+  if (params?.limit) queryParams.limit = String(params.limit);
+  if (params?.sentimiento) queryParams.sentimiento = params.sentimiento;
+  if (params?.categoria) queryParams.categoria = params.categoria;
+  if (params?.nivelRiesgo) queryParams.nivelRiesgo = params.nivelRiesgo;
+  if (params?.search) queryParams.search = params.search;
+  return get<Sentiment[]>('getSentiments', queryParams);
+};
+
+export const getSentimentStats = () =>
+  get<{
+    total: number;
+    positivos: number;
+    negativos: number;
+    neutros: number;
+    categorias: Record<string, number>;
+    nivelesRiesgo: Record<string, number>;
+  }>('getSentimentStats');
+
+// ============================================
+// GEMINI AI - Generación de Respuestas
+// ============================================
+
+export const generateAIResponse = (data: {
+  comentario: string;
+  contexto?: string;
+  tono?: 'profesional' | 'amigable' | 'neutral';
+}) => post<GeminiResponse>('generateAIResponse', data);

@@ -237,3 +237,27 @@ export interface ConfigItem {
 }
 
 export type Config = Record<string, ConfigItem>;
+
+// Sentimiento (Análisis de Redes Sociales)
+export interface Sentiment {
+  ID?: string;
+  Autor: string;
+  Responde_A: string;
+  Comentario: string;
+  Sentimiento: 'positivo' | 'negativo' | 'neutro';
+  Tema: string;
+  Categoria: string;
+  Etiquetas: string;
+  Nivel_Riesgo: string;
+  Todas_Categorias: string;
+  Detalle: string;
+  Tiempo: string;
+  Editado: string;
+}
+
+// Respuesta de Gemini AI
+export interface GeminiResponse {
+  respuesta: string;
+  tono: string;
+  puntosClave: string[];
+}

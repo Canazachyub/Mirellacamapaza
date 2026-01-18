@@ -14,13 +14,10 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: 'https://script.google.com',
+        target: 'https://script.google.com/macros/s/AKfycbzKLcr0Ig6zpMBdplm5_zGidxzxy5fAEuC4l9teM2dTlYbbjVODh3GhhoOAEsG7vIpkfA/exec',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/macros/s/AKfycbzKLcr0Ig6zpMBdplm5_zGidxzxy5fAEuC4l9teM2dTlYbbjVODh3GhhoOAEsG7vIpkfA/exec'),
+        rewrite: () => '',
         secure: true,
-        headers: {
-          'Origin': 'https://script.google.com',
-        },
       },
     },
   },
