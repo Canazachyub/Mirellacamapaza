@@ -5,6 +5,7 @@ interface LoaderProps {
   color?: 'primary' | 'white' | 'secondary';
   fullScreen?: boolean;
   text?: string;
+  className?: string;
 }
 
 const Loader = ({
@@ -12,6 +13,7 @@ const Loader = ({
   color = 'primary',
   fullScreen = false,
   text,
+  className,
 }: LoaderProps) => {
   const sizes = {
     sm: 'w-5 h-5 border-2',
@@ -26,7 +28,7 @@ const Loader = ({
   };
 
   const spinner = (
-    <div className="flex flex-col items-center justify-center gap-3">
+    <div className={cn("flex flex-col items-center justify-center gap-3", className)}>
       <div
         className={cn(
           'rounded-full animate-spin',

@@ -34,7 +34,7 @@ import {
   deleteTask,
 } from '@/services/api';
 import { useToast } from '@/store/uiStore';
-import type { Team, Volunteer, Task } from '@/types';
+import type { Team } from '@/types';
 
 const Teams = () => {
   // Estados principales
@@ -310,11 +310,6 @@ const Teams = () => {
       'from-cyan-500 to-cyan-600',
     ];
     return colors[index % colors.length];
-  };
-
-  const getTeamColorByName = (name: string) => {
-    const index = teams.findIndex(t => t.Nombre === name);
-    return getTeamColor(index >= 0 ? index : 0);
   };
 
   // Render: Vista detallada del equipo

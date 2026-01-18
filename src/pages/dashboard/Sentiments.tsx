@@ -18,7 +18,7 @@ import {
   X,
 } from 'lucide-react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import { Card, Button, Input, Loader } from '@/components/common';
+import { Card, Button, Loader } from '@/components/common';
 import { getSentiments, getSentimentStats, generateAIResponse } from '@/services/api';
 import { useToast } from '@/store/uiStore';
 import { cn } from '@/utils/cn';
