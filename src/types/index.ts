@@ -12,6 +12,14 @@ export interface Affiliate {
   Provincia: string;
   Ocupacion?: string;
   Estado: 'Pendiente' | 'Verificado' | 'Activo' | 'Inactivo' | 'Rechazado';
+  // Campos adicionales para ficha de afiliación
+  Region?: string;
+  FechaNacimiento?: string;
+  LugarNacimiento?: string;
+  EstadoCivil?: 'S' | 'C' | 'V' | 'D' | 'Conv';
+  Sexo?: 'M' | 'F';
+  NumeroDireccion?: string;
+  Urbanizacion?: string;
 }
 
 // Voluntario

@@ -15,150 +15,203 @@ export const generateAffiliatePDF = (affiliate: Affiliate) => {
   });
 
   const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
   const margin = 15;
   const contentWidth = pageWidth - margin * 2;
   let y = margin;
 
   // Colores
-  const primaryColor = [220, 38, 38] as const; // Rojo
-  const grayColor = [100, 100, 100] as const;
   const blackColor = [0, 0, 0] as const;
-  const lightGray = [240, 240, 240] as const;
+  const grayColor = [100, 100, 100] as const;
 
   // ============================================
-  // ENCABEZADO
+  // ENCABEZADO CON FOTO A LA DERECHA
   // ============================================
 
-  // Borde superior
-  doc.setFillColor(...primaryColor);
-  doc.rect(0, 0, pageWidth, 8, 'F');
+  // Cuadro de foto (arriba a la derecha) - POSICIÓN ORIGINAL
+  const fotoWidth = 30;
+  const fotoHeight = 35;
+  const fotoX = pageWidth - margin - fotoWidth;
+  const fotoY = margin;
 
-  y = 20;
-
-  // Título principal
-  doc.setFontSize(18);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(...blackColor);
-  doc.text('FICHA DE AFILIACIÓN', pageWidth / 2, y, { align: 'center' });
-
-  // Número de ficha
-  y += 8;
-  doc.setFontSize(10);
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.5);
+  doc.rect(fotoX, fotoY, fotoWidth, fotoHeight);
+  doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(...grayColor);
-  doc.text(`Ficha N° ${toString(affiliate.ID)}`, pageWidth - margin, y, { align: 'right' });
+  doc.text('FOTO DEL', fotoX + fotoWidth / 2, fotoY + fotoHeight / 2 - 2, { align: 'center' });
+  doc.text('AFILIADO', fotoX + fotoWidth / 2, fotoY + fotoHeight / 2 + 3, { align: 'center' });
 
-  // Partido
-  y += 10;
-  doc.setFillColor(...lightGray);
-  doc.roundedRect(margin, y - 5, contentWidth, 15, 2, 2, 'F');
+  // Título y Ficha N°
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(...primaryColor);
-  doc.text('PP000741 - AHORA NACIÓN - AN', pageWidth / 2, y + 4, { align: 'center' });
+  doc.setTextColor(...blackColor);
+  doc.text('FICHA DE AFILIACIÓN', margin, y + 5);
 
-  y += 18;
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Ficha N°', fotoX - 35, y + 5);
+  doc.rect(fotoX - 25, y, 20, 7); // Cuadro para número de ficha
 
-  // Alcance y fecha
+  y += 15;
+
+  // Cuadro del partido
+  doc.setLineWidth(0.8);
+  doc.rect(margin, y, contentWidth - fotoWidth - 10, 18);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('PP000741 – AHORA NACION - AN', margin + 5, y + 12);
+
+  y += 25;
+
+  // Alcance
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(...grayColor);
-  doc.text('Alcance de la organización política: Nacional', margin, y);
+  doc.text('Alcance de la organización política: Nacional (  )    Regional (  ) Región: ...............................', margin, y);
+  doc.setFontSize(7);
+  doc.text('(Solo llenar en caso de movimientos regionales)', margin + 95, y + 3);
 
-  const fechaAfiliacion = affiliate.Fecha
-    ? new Date(affiliate.Fecha).toLocaleDateString('es-PE')
-    : new Date().toLocaleDateString('es-PE');
-  doc.text(`FECHA DE AFILIACIÓN: ${fechaAfiliacion}`, pageWidth - margin, y, { align: 'right' });
+  y += 10;
+
+  // Fecha de afiliación
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text('FECHA DE AFILIACIÓN:', margin, y);
+  doc.setFont('helvetica', 'normal');
+  doc.text('/        /', margin + 48, y);
+  doc.text('(Obligatorio)', margin + 65, y);
 
   y += 8;
 
   // Declaración
   doc.setFontSize(8);
-  doc.setFont('helvetica', 'italic');
-  doc.setTextColor(...grayColor);
-  const declaracion = 'Por medio del presente manifiesto mi decisión de AFILIARME a la organización política, comprometiéndome a cumplir con su estatuto y demás normas internas. En fe de lo cual firmo el presente documento.';
+  const declaracion = 'Por medio del presente manifiesto mi decisión de AFILIARME a la organización política, comprometiéndome a cumplir con su estatuto y demás normas internas. En fe de lo cual firmo el presente documento:';
   const splitDeclaracion = doc.splitTextToSize(declaracion, contentWidth);
   doc.text(splitDeclaracion, margin, y);
 
-  y += 15;
+  y += 12;
 
   // ============================================
   // DATOS PERSONALES
   // ============================================
 
-  // Título sección
-  doc.setFillColor(...primaryColor);
-  doc.rect(margin, y, contentWidth, 7, 'F');
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(255, 255, 255);
-  doc.text('DATOS PERSONALES', margin + 3, y + 5);
+  doc.text('DATOS PERSONALES', margin, y);
 
-  y += 12;
+  y += 3;
 
-  // Función helper para dibujar campo
-  const drawField = (label: string, value: string, x: number, yPos: number, width: number) => {
+  // Función para dibujar campo con cuadro
+  const drawFieldBox = (label: string, value: string, x: number, yPos: number, width: number, height: number = 10) => {
     doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(...grayColor);
     doc.text(label, x, yPos);
 
-    doc.setDrawColor(200, 200, 200);
-    doc.line(x, yPos + 2, x + width, yPos + 2);
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.3);
+    doc.rect(x, yPos + 1, width, height);
 
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(...blackColor);
-    doc.text(toString(value) || '-', x, yPos + 7);
-
-    return yPos + 14;
+    if (value) {
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...blackColor);
+      doc.text(toString(value), x + 2, yPos + 7);
+    }
   };
 
-  // Separar nombre completo en partes (si está en formato "Nombres Apellidos")
-  const nombreCompleto = toString(affiliate.Nombre);
+  // Apellido Paterno, Materno, Nombres
+  const col3Width = (contentWidth - 10) / 3;
+
+  // Separar apellidos
   const apellidosCompleto = toString(affiliate.Apellidos);
+  const partesApellidos = apellidosCompleto.split(' ');
+  const apellidoPaterno = partesApellidos[0] || '';
+  const apellidoMaterno = partesApellidos.slice(1).join(' ') || '';
+  const nombres = toString(affiliate.Nombre);
 
-  let apellidoPaterno = '';
-  let apellidoMaterno = '';
-  let nombres = nombreCompleto;
-
-  // Si hay apellidos separados, usarlos
-  if (apellidosCompleto) {
-    const partesApellidos = apellidosCompleto.split(' ');
-    apellidoPaterno = partesApellidos[0] || '';
-    apellidoMaterno = partesApellidos.slice(1).join(' ') || '';
-  } else {
-    // Intentar extraer del nombre completo
-    const partes = nombreCompleto.split(' ');
-    if (partes.length >= 3) {
-      apellidoPaterno = partes[partes.length - 2] || '';
-      apellidoMaterno = partes[partes.length - 1] || '';
-      nombres = partes.slice(0, -2).join(' ');
-    } else if (partes.length === 2) {
-      apellidoPaterno = partes[1] || '';
-      nombres = partes[0] || '';
-    }
-  }
-
-  // Fila 1: Apellido Paterno, Materno, Nombres
-  const colWidth = (contentWidth - 10) / 3;
-  drawField('Apellido Paterno', apellidoPaterno, margin, y, colWidth);
-  drawField('Apellido Materno', apellidoMaterno, margin + colWidth + 5, y, colWidth);
-  drawField('Nombres', nombres, margin + (colWidth + 5) * 2, y, colWidth);
+  drawFieldBox('Apellido Paterno', apellidoPaterno, margin, y, col3Width);
+  drawFieldBox('Apellido Materno', apellidoMaterno, margin + col3Width + 5, y, col3Width);
+  drawFieldBox('Nombres', nombres, margin + (col3Width + 5) * 2, y, col3Width);
 
   y += 18;
 
-  // Fila 2: DNI, Fecha Nacimiento, Estado Civil, Sexo
-  const col4Width = (contentWidth - 15) / 4;
-  drawField('DNI', toString(affiliate.DNI), margin, y, col4Width);
-  drawField('Fecha de Nacimiento', '-', margin + col4Width + 5, y, col4Width);
-  drawField('Estado Civil', '-', margin + (col4Width + 5) * 2, y, col4Width);
-  drawField('Sexo', '-', margin + (col4Width + 5) * 3, y, col4Width);
+  // DNI, Fecha Nacimiento, Estado Civil, Sexo
+  const dniWidth = 30;
+  const fechaNacWidth = 40;
+
+  drawFieldBox('DNI', toString(affiliate.DNI), margin, y, dniWidth);
+
+  // Fecha de nacimiento con Día/Mes/Año
+  doc.setFontSize(8);
+  doc.setTextColor(...grayColor);
+  doc.text('Fecha de', margin + dniWidth + 8, y);
+  doc.text('Nacimiento', margin + dniWidth + 8, y + 4);
+  doc.setFontSize(7);
+  doc.text('Día    Mes    Año', margin + dniWidth + 25, y);
+  doc.rect(margin + dniWidth + 25, y + 1, fechaNacWidth, 10);
+
+  // Llenar fecha de nacimiento si existe
+  if (affiliate.FechaNacimiento) {
+    doc.setFontSize(9);
+    doc.setTextColor(...blackColor);
+    doc.text(toString(affiliate.FechaNacimiento), margin + dniWidth + 27, y + 7);
+  } else {
+    doc.text('/        /', margin + dniWidth + 35, y + 7);
+  }
+
+  // Estado Civil (S, C, V, D, Conv)
+  doc.setFontSize(8);
+  doc.setTextColor(...grayColor);
+  doc.text('Estado Civil', margin + dniWidth + fechaNacWidth + 35, y);
+  const estadoX = margin + dniWidth + fechaNacWidth + 35;
+  doc.rect(estadoX, y + 1, 8, 10);
+  doc.rect(estadoX + 8, y + 1, 8, 10);
+  doc.rect(estadoX + 16, y + 1, 8, 10);
+  doc.rect(estadoX + 24, y + 1, 8, 10);
+  doc.rect(estadoX + 32, y + 1, 12, 10);
+  doc.setFontSize(7);
+  doc.text('S', estadoX + 3, y + 7);
+  doc.text('C', estadoX + 11, y + 7);
+  doc.text('V', estadoX + 19, y + 7);
+  doc.text('D', estadoX + 27, y + 7);
+  doc.text('Conv.', estadoX + 34, y + 7);
+
+  // Marcar estado civil seleccionado con X
+  if (affiliate.EstadoCivil) {
+    doc.setFontSize(12);
+    doc.setTextColor(...blackColor);
+    const estadoPos: Record<string, number> = { 'S': 0, 'C': 8, 'V': 16, 'D': 24, 'Conv': 32 };
+    const offset = estadoPos[affiliate.EstadoCivil] || 0;
+    doc.text('X', estadoX + offset + 2.5, y + 8);
+  }
+
+  // Sexo (M, F)
+  doc.setFontSize(8);
+  doc.setTextColor(...grayColor);
+  doc.text('Sexo', estadoX + 50, y);
+  doc.rect(estadoX + 50, y + 1, 8, 10);
+  doc.rect(estadoX + 58, y + 1, 8, 10);
+  doc.setFontSize(7);
+  doc.text('M', estadoX + 53, y + 7);
+  doc.text('F', estadoX + 61, y + 7);
+
+  // Marcar sexo seleccionado con X
+  if (affiliate.Sexo) {
+    doc.setFontSize(12);
+    doc.setTextColor(...blackColor);
+    if (affiliate.Sexo === 'M') {
+      doc.text('X', estadoX + 52.5, y + 8);
+    } else if (affiliate.Sexo === 'F') {
+      doc.text('X', estadoX + 60.5, y + 8);
+    }
+  }
 
   y += 18;
 
   // Lugar de Nacimiento
-  drawField('Lugar de Nacimiento', '-', margin, y, contentWidth);
+  drawFieldBox('Lugar de Nacimiento', toString(affiliate.LugarNacimiento), margin, y, contentWidth);
 
   y += 18;
 
@@ -166,94 +219,69 @@ export const generateAffiliatePDF = (affiliate: Affiliate) => {
   // DOMICILIO ACTUAL
   // ============================================
 
-  doc.setFillColor(...primaryColor);
-  doc.rect(margin, y, contentWidth, 7, 'F');
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(255, 255, 255);
-  doc.text('DOMICILIO ACTUAL', margin + 3, y + 5);
+  doc.setTextColor(...blackColor);
+  doc.text('DOMICILIO ACTUAL', margin, y);
 
-  y += 12;
+  y += 3;
 
   // Región, Provincia, Distrito
-  drawField('Región', toString(affiliate.Provincia) ? 'Puno' : '-', margin, y, colWidth);
-  drawField('Provincia', toString(affiliate.Provincia), margin + colWidth + 5, y, colWidth);
-  drawField('Distrito', toString(affiliate.Distrito), margin + (colWidth + 5) * 2, y, colWidth);
+  drawFieldBox('Región', toString(affiliate.Region), margin, y, col3Width);
+  drawFieldBox('Provincia', toString(affiliate.Provincia), margin + col3Width + 5, y, col3Width);
+  drawFieldBox('Distrito', toString(affiliate.Distrito), margin + (col3Width + 5) * 2, y, col3Width);
 
   y += 18;
 
-  // Dirección
-  const dirWidth = contentWidth * 0.75;
-  const numWidth = contentWidth * 0.2;
-  drawField('Avenida / Calle / Jirón', toString(affiliate.Direccion), margin, y, dirWidth);
-  drawField('Número', '-', margin + dirWidth + 5, y, numWidth);
+  // Avenida/Calle/Jirón y Número
+  const dirWidth = contentWidth * 0.8;
+  const numWidth = contentWidth * 0.15;
+  drawFieldBox('Avenida / Calle / Jirón', toString(affiliate.Direccion), margin, y, dirWidth);
+  drawFieldBox('Número', toString(affiliate.NumeroDireccion), margin + dirWidth + 5, y, numWidth);
 
   y += 18;
 
   // Urbanización y Teléfono
   const halfWidth = (contentWidth - 5) / 2;
-  drawField('Urbanización / Sector / Caserío', '-', margin, y, halfWidth);
-  drawField('Teléfono', toString(affiliate.Telefono), margin + halfWidth + 5, y, halfWidth);
+  drawFieldBox('Urbanización / Sector / Caserío', toString(affiliate.Urbanizacion), margin, y, halfWidth);
+  drawFieldBox('Teléfono', toString(affiliate.Telefono), margin + halfWidth + 5, y, halfWidth);
 
   y += 18;
 
-  // Email
-  drawField('Correo electrónico', toString(affiliate.Email), margin, y, contentWidth);
+  // Correo electrónico
+  drawFieldBox('Correo electrónico', toString(affiliate.Email), margin, y, contentWidth);
 
   y += 25;
 
   // ============================================
-  // SECCIÓN FIRMA Y HUELLA
+  // FIRMA Y HUELLA (parte inferior)
   // ============================================
 
-  // Línea divisoria
-  doc.setDrawColor(200, 200, 200);
-  doc.line(margin, y, pageWidth - margin, y);
-
-  y += 15;
-
-  // Espacio para foto
-  const fotoWidth = 35;
-  const fotoHeight = 45;
-  doc.setDrawColor(150, 150, 150);
-  doc.setFillColor(250, 250, 250);
-  doc.rect(pageWidth - margin - fotoWidth, y - 10, fotoWidth, fotoHeight, 'FD');
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(...grayColor);
-  doc.text('FOTO DEL', pageWidth - margin - fotoWidth / 2, y + 12, { align: 'center' });
-  doc.text('AFILIADO', pageWidth - margin - fotoWidth / 2, y + 17, { align: 'center' });
-
-  // Firma
-  const firmaWidth = 60;
-  doc.line(margin, y + 25, margin + firmaWidth, y + 25);
+  // Línea de firma
+  const firmaY = pageHeight - 45;
+  doc.setLineWidth(0.3);
+  doc.line(margin, firmaY, margin + 70, firmaY);
   doc.setFontSize(9);
-  doc.text('Firma del Afiliado', margin + firmaWidth / 2, y + 30, { align: 'center' });
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...blackColor);
+  doc.text('Firma del Afiliado', margin + 35, firmaY + 5, { align: 'center' });
 
-  // Huella digital
-  const huellaX = margin + firmaWidth + 20;
+  // Cuadro de huella digital
+  const huellaX = pageWidth - margin - 35;
+  const huellaY = firmaY - 25;
   const huellaSize = 25;
-  doc.setDrawColor(150, 150, 150);
-  doc.setFillColor(250, 250, 250);
-  doc.rect(huellaX, y + 5, huellaSize, huellaSize, 'FD');
-  doc.setFontSize(8);
-  doc.text('Huella Digital', huellaX + huellaSize / 2, y + 35, { align: 'center' });
-
-  // ============================================
-  // PIE DE PÁGINA
-  // ============================================
-
-  const pageHeight = doc.internal.pageSize.getHeight();
-
-  // Borde inferior
-  doc.setFillColor(...primaryColor);
-  doc.rect(0, pageHeight - 15, pageWidth, 15, 'F');
-
+  doc.rect(huellaX, huellaY, huellaSize, huellaSize);
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(255, 255, 255);
-  doc.text('Dra. Mirella Camapaza Quispe - Candidata a Diputada por Puno N°4 - Ahora Nación', pageWidth / 2, pageHeight - 8, { align: 'center' });
-  doc.text('www.mirellacamapaza.com', pageWidth / 2, pageHeight - 4, { align: 'center' });
+  doc.text('Huella Digital', huellaX + huellaSize / 2, huellaY + huellaSize + 5, { align: 'center' });
+
+  // ============================================
+  // PIE DE PÁGINA (opcional - información de campaña)
+  // ============================================
+
+  doc.setFontSize(7);
+  doc.setTextColor(...grayColor);
+  doc.text('www.mirellacamapaza.com | Dra. Mirella Camapaza Quispe - Ahora Nación', pageWidth / 2, pageHeight - 10, { align: 'center' });
 
   // Descargar
   const dniStr = toString(affiliate.DNI) || toString(affiliate.ID);
