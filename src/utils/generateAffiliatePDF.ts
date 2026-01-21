@@ -51,8 +51,8 @@ export const generateAffiliatePDF = (affiliate: Affiliate) => {
 
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
-  doc.text('Ficha N°', fotoX - 35, y + 5);
-  doc.rect(fotoX - 25, y, 20, 7); // Cuadro para número de ficha
+  doc.text('Ficha N°', fotoX - 45, y + 5);
+  doc.rect(fotoX - 30, y, 25, 7); // Cuadro para número de ficha
 
   y += 15;
 
