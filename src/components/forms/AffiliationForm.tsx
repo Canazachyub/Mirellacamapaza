@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
@@ -6,7 +6,7 @@ import { User, Phone, Mail, CreditCard, Home, MapPin, Calendar, Building } from 
 import { Button, Input, Select } from '@/components/common';
 import { addAffiliate } from '@/services/api';
 import { useToast } from '@/store/uiStore';
-import { DISTRITOS_PUNO, PROVINCIAS_PUNO, REDES_SOCIALES } from '@/utils/constants';
+import { REGIONES_PERU, PROVINCIAS_POR_REGION, REDES_SOCIALES } from '@/utils/constants';
 import type { AffiliateFormData } from '@/types';
 
 const schema = z.object({
@@ -45,10 +45,6 @@ const SEXOS = [
   { value: 'F', label: 'Femenino' },
 ];
 
-const REGIONES = [
-  { value: 'Puno', label: 'Puno' },
-];
-
 const AffiliationForm = ({ onSuccess }: AffiliationFormProps) => {
   const toast = useToast();
 
@@ -56,10 +52,15 @@ const AffiliationForm = ({ onSuccess }: AffiliationFormProps) => {
     register,
     handleSubmit,
     reset,
+    control,
+    setValue,
     formState: { errors },
   } = useForm<AffiliateFormData>({
     resolver: zodResolver(schema),
   });
+
+  // Watch region to update provinces dynamically
+  const selectedRegion = useWatch({ control, name: 'region' });
 
   const mutation = useMutation({
     mutationFn: addAffiliate,
@@ -81,8 +82,20 @@ const AffiliationForm = ({ onSuccess }: AffiliationFormProps) => {
     mutation.mutate(data);
   };
 
-  const distritoOptions = DISTRITOS_PUNO.map((d) => ({ value: d, label: d }));
-  const provinciaOptions = PROVINCIAS_PUNO.map((p) => ({ value: p, label: p }));
+  // Get region options
+  const regionOptions = REGIONES_PERU.map((r) => ({ value: r, label: r }));
+
+  // Get province options based on selected region
+  const provinciaOptions = selectedRegion && PROVINCIAS_POR_REGION[selectedRegion]
+    ? PROVINCIAS_POR_REGION[selectedRegion].map((p) => ({ value: p, label: p }))
+    : [];
+
+  // Handle region change - reset provincia when region changes
+  const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newRegion = e.target.value;
+    setValue('region', newRegion);
+    setValue('provincia', ''); // Reset provincia when region changes
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -188,24 +201,33 @@ const AffiliationForm = ({ onSuccess }: AffiliationFormProps) => {
 
         {/* Región, Provincia, Distrito */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <Select
-            label="Región"
-            options={REGIONES}
-            placeholder="Seleccione región"
-            error={errors.region?.message}
-            {...register('region')}
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Región</label>
+            <select
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              {...register('region')}
+              onChange={handleRegionChange}
+            >
+              <option value="">Seleccione región</option>
+              {regionOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+            {errors.region?.message && (
+              <p className="text-sm text-red-500 mt-1">{errors.region.message}</p>
+            )}
+          </div>
           <Select
             label="Provincia"
             options={provinciaOptions}
-            placeholder="Seleccione provincia"
+            placeholder={selectedRegion ? "Seleccione provincia" : "Primero seleccione región"}
             error={errors.provincia?.message}
             {...register('provincia')}
+            disabled={!selectedRegion}
           />
-          <Select
+          <Input
             label="Distrito"
-            options={distritoOptions}
-            placeholder="Seleccione distrito"
+            placeholder="Ej: Puno"
             error={errors.distrito?.message}
             {...register('distrito')}
           />
