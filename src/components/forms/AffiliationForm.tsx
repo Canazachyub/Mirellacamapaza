@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
-import { User, Phone, Mail, CreditCard, Home } from 'lucide-react';
+import { User, Phone, Mail, CreditCard, Home, MapPin, Calendar, Building } from 'lucide-react';
 import { Button, Input, Select } from '@/components/common';
 import { addAffiliate } from '@/services/api';
 import { useToast } from '@/store/uiStore';
@@ -10,19 +10,44 @@ import { DISTRITOS_PUNO, PROVINCIAS_PUNO, REDES_SOCIALES } from '@/utils/constan
 import type { AffiliateFormData } from '@/types';
 
 const schema = z.object({
-  nombre: z.string().min(2, 'El nombre es requerido'),
-  apellidos: z.string().min(2, 'Los apellidos son requeridos'),
+  apellidoPaterno: z.string().min(2, 'El apellido paterno es requerido'),
+  apellidoMaterno: z.string().min(2, 'El apellido materno es requerido'),
+  nombres: z.string().min(2, 'Los nombres son requeridos'),
   dni: z.string().length(8, 'El DNI debe tener 8 dígitos').regex(/^\d+$/, 'Solo números'),
+  fechaNacimiento: z.string().optional(),
+  estadoCivil: z.enum(['S', 'C', 'V', 'D', 'Conv']).optional(),
+  sexo: z.enum(['M', 'F']).optional(),
+  lugarNacimiento: z.string().optional(),
+  region: z.string().optional(),
+  provincia: z.string().optional(),
+  distrito: z.string().optional(),
+  direccion: z.string().optional(),
+  numeroDireccion: z.string().optional(),
+  urbanizacion: z.string().optional(),
   telefono: z.string().min(9, 'El teléfono debe tener 9 dígitos').regex(/^9\d{8}$/, 'Debe comenzar con 9'),
   email: z.string().email('Email inválido').optional().or(z.literal('')),
-  direccion: z.string().optional(),
-  distrito: z.string().optional(),
-  provincia: z.string().optional(),
 });
 
 interface AffiliationFormProps {
   onSuccess?: () => void;
 }
+
+const ESTADOS_CIVILES = [
+  { value: 'S', label: 'Soltero(a)' },
+  { value: 'C', label: 'Casado(a)' },
+  { value: 'V', label: 'Viudo(a)' },
+  { value: 'D', label: 'Divorciado(a)' },
+  { value: 'Conv', label: 'Conviviente' },
+];
+
+const SEXOS = [
+  { value: 'M', label: 'Masculino' },
+  { value: 'F', label: 'Femenino' },
+];
+
+const REGIONES = [
+  { value: 'Puno', label: 'Puno' },
+];
 
 const AffiliationForm = ({ onSuccess }: AffiliationFormProps) => {
   const toast = useToast();
@@ -40,7 +65,7 @@ const AffiliationForm = ({ onSuccess }: AffiliationFormProps) => {
     mutationFn: addAffiliate,
     onSuccess: (response) => {
       if (response.success) {
-        toast.success(response.message || '¡Registro exitoso!');
+        toast.success(response.message || '¡Registro exitoso! Gracias por afiliarte.');
         reset();
         onSuccess?.();
       } else {
@@ -61,84 +86,188 @@ const AffiliationForm = ({ onSuccess }: AffiliationFormProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {/* Nombre y Apellidos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Encabezado estilo ficha oficial */}
+      <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4 mb-6">
+        <div className="flex justify-between items-start">
+          <div>
+            <h3 className="text-lg font-bold text-gray-800">FICHA DE AFILIACIÓN</h3>
+            <p className="text-sm text-gray-600 font-medium">PP000741 - AHORA NACIÓN - AN</p>
+          </div>
+          <div className="text-right">
+            <p className="text-xs text-gray-500">Alcance: Nacional</p>
+          </div>
+        </div>
+        <p className="text-xs text-gray-500 mt-2 italic">
+          Por medio del presente manifiesto mi decisión de AFILIARME a la organización política,
+          comprometiéndome a cumplir con su estatuto y demás normas internas.
+        </p>
+      </div>
+
+      {/* DATOS PERSONALES */}
+      <div className="border border-gray-200 rounded-lg p-4">
+        <h4 className="text-sm font-bold text-gray-700 mb-4 pb-2 border-b flex items-center gap-2">
+          <User className="w-4 h-4" />
+          DATOS PERSONALES
+        </h4>
+
+        {/* Apellido Paterno, Materno, Nombres */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <Input
+            label="Apellido Paterno"
+            placeholder="Ej: García"
+            error={errors.apellidoPaterno?.message}
+            {...register('apellidoPaterno')}
+            required
+          />
+          <Input
+            label="Apellido Materno"
+            placeholder="Ej: López"
+            error={errors.apellidoMaterno?.message}
+            {...register('apellidoMaterno')}
+            required
+          />
+          <Input
+            label="Nombres"
+            placeholder="Ej: Juan Carlos"
+            error={errors.nombres?.message}
+            {...register('nombres')}
+            required
+          />
+        </div>
+
+        {/* DNI, Fecha Nacimiento, Estado Civil, Sexo */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <Input
+            label="DNI"
+            placeholder="12345678"
+            leftIcon={<CreditCard className="w-4 h-4" />}
+            error={errors.dni?.message}
+            maxLength={8}
+            {...register('dni')}
+            required
+          />
+          <Input
+            label="Fecha de Nacimiento"
+            type="date"
+            leftIcon={<Calendar className="w-4 h-4" />}
+            error={errors.fechaNacimiento?.message}
+            {...register('fechaNacimiento')}
+          />
+          <Select
+            label="Estado Civil"
+            options={ESTADOS_CIVILES}
+            placeholder="Seleccione"
+            error={errors.estadoCivil?.message}
+            {...register('estadoCivil')}
+          />
+          <Select
+            label="Sexo"
+            options={SEXOS}
+            placeholder="Seleccione"
+            error={errors.sexo?.message}
+            {...register('sexo')}
+          />
+        </div>
+
+        {/* Lugar de Nacimiento */}
         <Input
-          label="Nombres"
-          placeholder="Ingresa tus nombres"
-          leftIcon={<User className="w-5 h-5" />}
-          error={errors.nombre?.message}
-          {...register('nombre')}
-          required
-        />
-        <Input
-          label="Apellidos"
-          placeholder="Ingresa tus apellidos"
-          leftIcon={<User className="w-5 h-5" />}
-          error={errors.apellidos?.message}
-          {...register('apellidos')}
-          required
+          label="Lugar de Nacimiento"
+          placeholder="Ej: Puno, Perú"
+          leftIcon={<MapPin className="w-4 h-4" />}
+          error={errors.lugarNacimiento?.message}
+          {...register('lugarNacimiento')}
         />
       </div>
 
-      {/* DNI y Teléfono */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* DOMICILIO ACTUAL */}
+      <div className="border border-gray-200 rounded-lg p-4">
+        <h4 className="text-sm font-bold text-gray-700 mb-4 pb-2 border-b flex items-center gap-2">
+          <Home className="w-4 h-4" />
+          DOMICILIO ACTUAL
+        </h4>
+
+        {/* Región, Provincia, Distrito */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <Select
+            label="Región"
+            options={REGIONES}
+            placeholder="Seleccione región"
+            error={errors.region?.message}
+            {...register('region')}
+          />
+          <Select
+            label="Provincia"
+            options={provinciaOptions}
+            placeholder="Seleccione provincia"
+            error={errors.provincia?.message}
+            {...register('provincia')}
+          />
+          <Select
+            label="Distrito"
+            options={distritoOptions}
+            placeholder="Seleccione distrito"
+            error={errors.distrito?.message}
+            {...register('distrito')}
+          />
+        </div>
+
+        {/* Dirección y Número */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+          <div className="md:col-span-3">
+            <Input
+              label="Avenida / Calle / Jirón"
+              placeholder="Ej: Jr. Lima"
+              leftIcon={<Building className="w-4 h-4" />}
+              error={errors.direccion?.message}
+              {...register('direccion')}
+            />
+          </div>
+          <Input
+            label="Número"
+            placeholder="Ej: 123"
+            error={errors.numeroDireccion?.message}
+            {...register('numeroDireccion')}
+          />
+        </div>
+
+        {/* Urbanización */}
         <Input
-          label="DNI"
-          placeholder="12345678"
-          leftIcon={<CreditCard className="w-5 h-5" />}
-          error={errors.dni?.message}
-          maxLength={8}
-          {...register('dni')}
-          required
+          label="Urbanización / Sector / Caserío"
+          placeholder="Ej: Urb. San Carlos"
+          error={errors.urbanizacion?.message}
+          {...register('urbanizacion')}
+          className="mb-4"
         />
-        <Input
-          label="Teléfono"
-          placeholder="987654321"
-          leftIcon={<Phone className="w-5 h-5" />}
-          error={errors.telefono?.message}
-          maxLength={9}
-          {...register('telefono')}
-          required
-        />
+
+        {/* Teléfono y Email */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input
+            label="Teléfono"
+            placeholder="987654321"
+            leftIcon={<Phone className="w-4 h-4" />}
+            error={errors.telefono?.message}
+            maxLength={9}
+            {...register('telefono')}
+            required
+          />
+          <Input
+            label="Correo Electrónico"
+            type="email"
+            placeholder="tu@email.com"
+            leftIcon={<Mail className="w-4 h-4" />}
+            error={errors.email?.message}
+            helperText="Opcional"
+            {...register('email')}
+          />
+        </div>
       </div>
 
-      {/* Email */}
-      <Input
-        label="Email"
-        type="email"
-        placeholder="tu@email.com"
-        leftIcon={<Mail className="w-5 h-5" />}
-        error={errors.email?.message}
-        helperText="Opcional pero recomendado"
-        {...register('email')}
-      />
-
-      {/* Dirección */}
-      <Input
-        label="Dirección"
-        placeholder="Jr. / Av. / Calle"
-        leftIcon={<Home className="w-5 h-5" />}
-        error={errors.direccion?.message}
-        {...register('direccion')}
-      />
-
-      {/* Distrito y Provincia */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Select
-          label="Distrito"
-          options={distritoOptions}
-          placeholder="Selecciona tu distrito"
-          error={errors.distrito?.message}
-          {...register('distrito')}
-        />
-        <Select
-          label="Provincia"
-          options={provinciaOptions}
-          placeholder="Selecciona tu provincia"
-          error={errors.provincia?.message}
-          {...register('provincia')}
-        />
+      {/* Declaración */}
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <p className="text-xs text-yellow-800">
+          <strong>Declaración:</strong> Al enviar este formulario, declaro que los datos proporcionados
+          son verdaderos y acepto las normas del partido Ahora Nación.
+        </p>
       </div>
 
       {/* Submit Button */}
@@ -149,13 +278,13 @@ const AffiliationForm = ({ onSuccess }: AffiliationFormProps) => {
         fullWidth
         isLoading={mutation.isPending}
       >
-        ¡Quiero Afiliarme!
+        ¡Quiero Afiliarme a Ahora Nación!
       </Button>
 
       {/* WhatsApp Group */}
       <div className="text-center pt-4 border-t">
         <p className="text-secondary-600 text-sm mb-3">
-          ¿Quieres estar más conectado?
+          ¿Quieres estar más conectado con la campaña?
         </p>
         <a
           href={REDES_SOCIALES.whatsappGrupo.url}

@@ -13,12 +13,14 @@ import {
   Trash2,
   CheckCircle,
   XCircle,
+  FileText,
 } from 'lucide-react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, Button, Input, Badge, Modal } from '@/components/common';
 import { getAffiliates, updateAffiliate, deleteAffiliate } from '@/services/api';
 import { useToast } from '@/store/uiStore';
 import { formatRelativeDate, getStatusColor } from '@/utils/helpers';
+import { generateAffiliatePDF } from '@/utils/generateAffiliatePDF';
 import type { Affiliate } from '@/types';
 
 const Affiliates = () => {
@@ -66,6 +68,16 @@ const Affiliates = () => {
 
   const handleStatusChange = (id: string, estado: string) => {
     updateMutation.mutate({ id, estado });
+  };
+
+  const handleDownloadPDF = (affiliate: Affiliate) => {
+    try {
+      generateAffiliatePDF(affiliate);
+      toast.success('Ficha PDF generada correctamente');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast.error('Error al generar el PDF');
+    }
   };
 
   const exportToCSV = () => {
@@ -246,6 +258,13 @@ const Affiliates = () => {
                         >
                           <Eye className="w-4 h-4" />
                         </button>
+                        <button
+                          onClick={() => handleDownloadPDF(affiliate)}
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="Descargar Ficha PDF"
+                        >
+                          <FileText className="w-4 h-4" />
+                        </button>
                         {affiliate.Estado === 'Pendiente' && (
                           <>
                             <button
@@ -350,6 +369,23 @@ const Affiliates = () => {
                 <p className="font-medium">{selectedAffiliate.Ocupacion}</p>
               </div>
             )}
+
+            {/* Botón de descarga PDF destacado */}
+            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-blue-900">Ficha de Afiliación PDF</p>
+                  <p className="text-sm text-blue-700">Descarga la ficha para agregar foto, firma y huella digital</p>
+                </div>
+                <Button
+                  variant="primary"
+                  leftIcon={<FileText className="w-4 h-4" />}
+                  onClick={() => handleDownloadPDF(selectedAffiliate)}
+                >
+                  Descargar PDF
+                </Button>
+              </div>
+            </div>
 
             <div className="flex items-center justify-between pt-4 border-t">
               <Badge size="lg" className={getStatusColor(selectedAffiliate.Estado)}>

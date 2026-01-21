@@ -75,6 +75,14 @@ const Header = () => {
 
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center gap-3">
+            <Link to="/voluntariado">
+              <Button
+                variant={isScrolled ? 'outline' : 'white'}
+                size="md"
+              >
+                Sé Voluntario
+              </Button>
+            </Link>
             <Link to="/afiliate">
               <Button
                 variant={isScrolled ? 'primary' : 'white'}
@@ -129,7 +137,12 @@ const Header = () => {
                   {item.label}
                 </Link>
               ))}
-              <div className="pt-3 border-t mt-3">
+              <div className="pt-3 border-t mt-3 flex flex-col gap-2">
+                <Link to="/voluntariado">
+                  <Button variant="outline" fullWidth>
+                    Sé Voluntario
+                  </Button>
+                </Link>
                 <Link to="/afiliate">
                   <Button variant="primary" fullWidth>
                     ¡Afíliate!

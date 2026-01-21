@@ -191,14 +191,24 @@ export interface NavItem {
 
 // Form Data Types
 export interface AffiliateFormData {
-  nombre: string;
-  apellidos: string;
+  // Datos personales
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+  nombres: string;
   dni: string;
+  fechaNacimiento?: string;
+  estadoCivil?: 'S' | 'C' | 'V' | 'D' | 'Conv';
+  sexo?: 'M' | 'F';
+  lugarNacimiento?: string;
+  // Domicilio actual
+  region?: string;
+  provincia?: string;
+  distrito?: string;
+  direccion?: string;
+  numeroDireccion?: string;
+  urbanizacion?: string;
   telefono: string;
   email?: string;
-  direccion?: string;
-  distrito?: string;
-  provincia?: string;
 }
 
 export interface VolunteerFormData {
