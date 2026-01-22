@@ -7,6 +7,17 @@ const toString = (value: unknown): string => {
   return String(value);
 };
 
+// Helper para formatear fecha de YYYY-MM-DD a DD-MM-YYYY
+const formatDateDMY = (dateStr: string | undefined): string => {
+  if (!dateStr) return '';
+  // Si tiene formato YYYY-MM-DD, convertir a DD-MM-YYYY
+  const match = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (match) {
+    return `${match[3]}-${match[2]}-${match[1]}`;
+  }
+  return String(dateStr);
+};
+
 export const generateAffiliatePDF = (affiliate: Affiliate) => {
   const doc = new jsPDF({
     orientation: 'portrait',
@@ -152,11 +163,11 @@ export const generateAffiliatePDF = (affiliate: Affiliate) => {
   doc.text('Día    Mes    Año', margin + dniWidth + 25, y);
   doc.rect(margin + dniWidth + 25, y + 1, fechaNacWidth, 10);
 
-  // Llenar fecha de nacimiento si existe
+  // Llenar fecha de nacimiento si existe (convertir de YYYY-MM-DD a DD-MM-YYYY)
   if (affiliate.FechaNacimiento) {
     doc.setFontSize(9);
     doc.setTextColor(...blackColor);
-    doc.text(toString(affiliate.FechaNacimiento), margin + dniWidth + 27, y + 7);
+    doc.text(formatDateDMY(affiliate.FechaNacimiento), margin + dniWidth + 27, y + 7);
   } else {
     doc.text('/        /', margin + dniWidth + 35, y + 7);
   }
