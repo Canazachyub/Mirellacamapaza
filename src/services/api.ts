@@ -17,7 +17,7 @@ import type {
 } from '@/types';
 
 // URL de la API - siempre usa URL directa (Google Apps Script maneja CORS)
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxI8tghYRyhLBto-wsIfEQQ4k1Zg816LagW_9uYraGFJ14wB2Gk2lLu6ZOcodPSeQ4CKA/exec';
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3D2G69r1GSMPeCMQnQDaCXYqjOail67fFJlhZF1HyiroMZIz-vYmKSgQKuO9A9Sue/exec';
 const API_URL = import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL || GOOGLE_APPS_SCRIPT_URL;
 
 // Helper para hacer peticiones GET con fetch (compatible con Google Apps Script)
