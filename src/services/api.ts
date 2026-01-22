@@ -96,6 +96,16 @@ export const getAffiliate = (id: string) => get<Affiliate>('getAffiliate', { id 
 
 // Transformar datos del formulario al formato del backend
 const transformAffiliateData = (data: AffiliateFormData) => {
+  // Formatear fecha de nacimiento a YYYY-MM-DD (sin hora)
+  const formatDate = (dateStr: string | undefined): string => {
+    if (!dateStr) return '';
+    // Si ya está en formato YYYY-MM-DD, retornar tal cual
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+    // Si tiene formato ISO con hora, extraer solo la fecha
+    if (dateStr.includes('T')) return dateStr.split('T')[0];
+    return dateStr;
+  };
+
   return {
     Nombre: data.nombres,
     Apellidos: `${data.apellidoPaterno} ${data.apellidoMaterno}`.trim(),
@@ -108,7 +118,7 @@ const transformAffiliateData = (data: AffiliateFormData) => {
     Distrito: data.distrito || '',
     Provincia: data.provincia || '',
     Region: data.region || '',
-    FechaNacimiento: data.fechaNacimiento || '',
+    FechaNacimiento: formatDate(data.fechaNacimiento),
     LugarNacimiento: data.lugarNacimiento || '',
     EstadoCivil: data.estadoCivil || '',
     Sexo: data.sexo || '',
