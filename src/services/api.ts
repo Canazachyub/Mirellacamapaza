@@ -17,7 +17,7 @@ import type {
 } from '@/types';
 
 // URL de la API - siempre usa URL directa (Google Apps Script maneja CORS)
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwR-81-k1CHOJIqL3CeRaK3Zx2i7ceht3pR-tJIP8-mNCNvr4dYdq2P1M0y69VsafnJ-Q/exec';
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxI8tghYRyhLBto-wsIfEQQ4k1Zg816LagW_9uYraGFJ14wB2Gk2lLu6ZOcodPSeQ4CKA/exec';
 const API_URL = import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL || GOOGLE_APPS_SCRIPT_URL;
 
 // Helper para hacer peticiones GET con fetch (compatible con Google Apps Script)
@@ -94,7 +94,28 @@ export const getAffiliates = (params?: GetAffiliatesParams) => {
 
 export const getAffiliate = (id: string) => get<Affiliate>('getAffiliate', { id });
 
-export const addAffiliate = (data: AffiliateFormData) => post<{ id: string }>('addAffiliate', data);
+// Transformar datos del formulario al formato del backend
+const transformAffiliateData = (data: AffiliateFormData) => {
+  return {
+    Nombre: data.nombres,
+    Apellidos: `${data.apellidoPaterno} ${data.apellidoMaterno}`.trim(),
+    DNI: data.dni,
+    Telefono: data.telefono,
+    Email: data.email || '',
+    Direccion: data.direccion || '',
+    NumeroDireccion: data.numeroDireccion || '',
+    Urbanizacion: data.urbanizacion || '',
+    Distrito: data.distrito || '',
+    Provincia: data.provincia || '',
+    Region: data.region || '',
+    FechaNacimiento: data.fechaNacimiento || '',
+    LugarNacimiento: data.lugarNacimiento || '',
+    EstadoCivil: data.estadoCivil || '',
+    Sexo: data.sexo || '',
+  };
+};
+
+export const addAffiliate = (data: AffiliateFormData) => post<{ id: string }>('addAffiliate', transformAffiliateData(data));
 
 export const updateAffiliate = (id: string, data: Partial<Affiliate>) =>
   post<void>('updateAffiliate', { id, ...data });

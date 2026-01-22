@@ -300,26 +300,36 @@ function addAffiliate(data) {
   const id = Utilities.getUuid();
   const timestamp = new Date();
 
-  // Verificar DNI duplicado
+  // Verificar DNI duplicado (columna 5 = DNI)
   const existingData = sheet.getDataRange().getValues();
+  const dniToCheck = data.DNI || data.dni;
   for (let i = 1; i < existingData.length; i++) {
-    if (existingData[i][4] === data.dni) {
+    if (existingData[i][4] === dniToCheck) {
       return { success: false, error: 'Este DNI ya está registrado' };
     }
   }
 
+  // COLUMNAS ACTUALIZADAS (18 columnas):
+  // ID | Fecha | Nombre | Apellidos | DNI | Telefono | Email | Direccion | NumeroDireccion | Urbanizacion | Distrito | Provincia | Region | FechaNacimiento | LugarNacimiento | EstadoCivil | Sexo | Estado
   const row = [
-    id,
-    timestamp,
-    data.nombre,
-    data.apellidos,
-    data.dni,
-    data.telefono,
-    data.email || '',
-    data.direccion || '',
-    data.distrito || '',
-    data.provincia || '',
-    'Pendiente',
+    id,                                           // 1. ID
+    timestamp,                                    // 2. Fecha
+    data.Nombre || data.nombre || '',             // 3. Nombre
+    data.Apellidos || data.apellidos || '',       // 4. Apellidos
+    data.DNI || data.dni || '',                   // 5. DNI
+    data.Telefono || data.telefono || '',         // 6. Telefono
+    data.Email || data.email || '',               // 7. Email
+    data.Direccion || data.direccion || '',       // 8. Direccion
+    data.NumeroDireccion || data.numeroDireccion || '',  // 9. NumeroDireccion (NUEVO)
+    data.Urbanizacion || data.urbanizacion || '', // 10. Urbanizacion (NUEVO)
+    data.Distrito || data.distrito || '',         // 11. Distrito
+    data.Provincia || data.provincia || '',       // 12. Provincia
+    data.Region || data.region || '',             // 13. Region (NUEVO)
+    data.FechaNacimiento || data.fechaNacimiento || '',  // 14. FechaNacimiento (NUEVO)
+    data.LugarNacimiento || data.lugarNacimiento || '',  // 15. LugarNacimiento (NUEVO)
+    data.EstadoCivil || data.estadoCivil || '',   // 16. EstadoCivil (NUEVO)
+    data.Sexo || data.sexo || '',                 // 17. Sexo (NUEVO)
+    'Pendiente',                                  // 18. Estado
   ];
 
   sheet.appendRow(row);
@@ -343,15 +353,26 @@ function updateAffiliate(data) {
   for (let i = 1; i < dataRange.length; i++) {
     if (dataRange[i][0] === data.id) {
       const rowNum = i + 1;
-      if (data.nombre) sheet.getRange(rowNum, 3).setValue(data.nombre);
-      if (data.apellidos) sheet.getRange(rowNum, 4).setValue(data.apellidos);
-      if (data.dni) sheet.getRange(rowNum, 5).setValue(data.dni);
-      if (data.telefono) sheet.getRange(rowNum, 6).setValue(data.telefono);
-      if (data.email !== undefined) sheet.getRange(rowNum, 7).setValue(data.email);
-      if (data.direccion !== undefined) sheet.getRange(rowNum, 8).setValue(data.direccion);
-      if (data.distrito) sheet.getRange(rowNum, 9).setValue(data.distrito);
-      if (data.provincia) sheet.getRange(rowNum, 10).setValue(data.provincia);
-      if (data.estado) sheet.getRange(rowNum, 11).setValue(data.estado);
+      // COLUMNAS ACTUALIZADAS (18 columnas):
+      // 1-ID | 2-Fecha | 3-Nombre | 4-Apellidos | 5-DNI | 6-Telefono | 7-Email | 8-Direccion |
+      // 9-NumeroDireccion | 10-Urbanizacion | 11-Distrito | 12-Provincia | 13-Region |
+      // 14-FechaNacimiento | 15-LugarNacimiento | 16-EstadoCivil | 17-Sexo | 18-Estado
+      if (data.Nombre || data.nombre) sheet.getRange(rowNum, 3).setValue(data.Nombre || data.nombre);
+      if (data.Apellidos || data.apellidos) sheet.getRange(rowNum, 4).setValue(data.Apellidos || data.apellidos);
+      if (data.DNI || data.dni) sheet.getRange(rowNum, 5).setValue(data.DNI || data.dni);
+      if (data.Telefono || data.telefono) sheet.getRange(rowNum, 6).setValue(data.Telefono || data.telefono);
+      if ((data.Email !== undefined) || (data.email !== undefined)) sheet.getRange(rowNum, 7).setValue(data.Email || data.email || '');
+      if ((data.Direccion !== undefined) || (data.direccion !== undefined)) sheet.getRange(rowNum, 8).setValue(data.Direccion || data.direccion || '');
+      if ((data.NumeroDireccion !== undefined) || (data.numeroDireccion !== undefined)) sheet.getRange(rowNum, 9).setValue(data.NumeroDireccion || data.numeroDireccion || '');
+      if ((data.Urbanizacion !== undefined) || (data.urbanizacion !== undefined)) sheet.getRange(rowNum, 10).setValue(data.Urbanizacion || data.urbanizacion || '');
+      if (data.Distrito || data.distrito) sheet.getRange(rowNum, 11).setValue(data.Distrito || data.distrito);
+      if (data.Provincia || data.provincia) sheet.getRange(rowNum, 12).setValue(data.Provincia || data.provincia);
+      if ((data.Region !== undefined) || (data.region !== undefined)) sheet.getRange(rowNum, 13).setValue(data.Region || data.region || '');
+      if ((data.FechaNacimiento !== undefined) || (data.fechaNacimiento !== undefined)) sheet.getRange(rowNum, 14).setValue(data.FechaNacimiento || data.fechaNacimiento || '');
+      if ((data.LugarNacimiento !== undefined) || (data.lugarNacimiento !== undefined)) sheet.getRange(rowNum, 15).setValue(data.LugarNacimiento || data.lugarNacimiento || '');
+      if ((data.EstadoCivil !== undefined) || (data.estadoCivil !== undefined)) sheet.getRange(rowNum, 16).setValue(data.EstadoCivil || data.estadoCivil || '');
+      if ((data.Sexo !== undefined) || (data.sexo !== undefined)) sheet.getRange(rowNum, 17).setValue(data.Sexo || data.sexo || '');
+      if (data.Estado || data.estado) sheet.getRange(rowNum, 18).setValue(data.Estado || data.estado);
       return { success: true, message: 'Afiliado actualizado' };
     }
   }
@@ -1264,16 +1285,21 @@ function getStats() {
   if (totalAffiliates > 0) {
     const affiliatesData = affiliatesSheet.getDataRange().getValues();
     affiliatesData.slice(1).forEach((row) => {
-      // Por distrito
-      const distrito = row[8] || 'Sin especificar';
+      // ÍNDICES ACTUALIZADOS (18 columnas):
+      // 0-ID | 1-Fecha | 2-Nombre | 3-Apellidos | 4-DNI | 5-Telefono | 6-Email | 7-Direccion |
+      // 8-NumeroDireccion | 9-Urbanizacion | 10-Distrito | 11-Provincia | 12-Region |
+      // 13-FechaNacimiento | 14-LugarNacimiento | 15-EstadoCivil | 16-Sexo | 17-Estado
+
+      // Por distrito (índice 10)
+      const distrito = row[10] || 'Sin especificar';
       affiliatesByDistrict[distrito] = (affiliatesByDistrict[distrito] || 0) + 1;
 
-      // Por provincia
-      const provincia = row[9] || 'Sin especificar';
+      // Por provincia (índice 11)
+      const provincia = row[11] || 'Sin especificar';
       affiliatesByProvince[provincia] = (affiliatesByProvince[provincia] || 0) + 1;
 
-      // Por estado
-      const estado = row[10] || 'Pendiente';
+      // Por estado (índice 17)
+      const estado = row[17] || 'Pendiente';
       affiliatesByStatus[estado] = (affiliatesByStatus[estado] || 0) + 1;
     });
   }
@@ -1410,7 +1436,24 @@ function shouldNotify(configKey) {
 // ============================================
 
 function sendAffiliateNotification(data) {
-  const subject = `🎉 Nuevo Afiliado: ${data.nombre} ${data.apellidos}`;
+  // Compatibilidad con ambos formatos de nombres de campos
+  const nombre = data.Nombre || data.nombre || '';
+  const apellidos = data.Apellidos || data.apellidos || '';
+  const dni = data.DNI || data.dni || '';
+  const telefono = data.Telefono || data.telefono || '';
+  const email = data.Email || data.email || '';
+  const direccion = data.Direccion || data.direccion || '';
+  const numeroDireccion = data.NumeroDireccion || data.numeroDireccion || '';
+  const urbanizacion = data.Urbanizacion || data.urbanizacion || '';
+  const distrito = data.Distrito || data.distrito || '';
+  const provincia = data.Provincia || data.provincia || '';
+  const region = data.Region || data.region || '';
+  const fechaNacimiento = data.FechaNacimiento || data.fechaNacimiento || '';
+  const lugarNacimiento = data.LugarNacimiento || data.lugarNacimiento || '';
+  const estadoCivil = data.EstadoCivil || data.estadoCivil || '';
+  const sexo = data.Sexo || data.sexo || '';
+
+  const subject = `🎉 Nuevo Afiliado: ${nombre} ${apellidos}`;
   const body = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <div style="background: linear-gradient(135deg, #dc2626, #991b1b); padding: 20px; text-align: center;">
@@ -1420,13 +1463,19 @@ function sendAffiliateNotification(data) {
       <div style="padding: 20px; background: #f9f9f9;">
         <h2 style="color: #dc2626; margin-top: 0;">Datos del Afiliado</h2>
         <table style="width: 100%; border-collapse: collapse;">
-          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold; width: 140px;">Nombre:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${data.nombre} ${data.apellidos}</td></tr>
-          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">DNI:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${data.dni}</td></tr>
-          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Teléfono:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${data.telefono}</td></tr>
-          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Email:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${data.email || 'No proporcionado'}</td></tr>
-          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Dirección:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${data.direccion || 'No proporcionada'}</td></tr>
-          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Distrito:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${data.distrito || 'No especificado'}</td></tr>
-          <tr><td style="padding: 10px; font-weight: bold;">Provincia:</td><td style="padding: 10px;">${data.provincia || 'No especificada'}</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold; width: 140px;">Nombre:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${nombre} ${apellidos}</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">DNI:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${dni}</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Fecha Nac.:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${fechaNacimiento || 'No proporcionada'}</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Lugar Nac.:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${lugarNacimiento || 'No proporcionado'}</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Estado Civil:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${estadoCivil || '-'}</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Sexo:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${sexo || '-'}</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Teléfono:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${telefono}</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Email:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${email || 'No proporcionado'}</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Dirección:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${direccion} ${numeroDireccion}</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Urbanización:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${urbanizacion || '-'}</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Distrito:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${distrito || 'No especificado'}</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Provincia:</td><td style="padding: 10px; border-bottom: 1px solid #ddd;">${provincia || 'No especificada'}</td></tr>
+          <tr><td style="padding: 10px; font-weight: bold;">Región:</td><td style="padding: 10px;">${region || 'No especificada'}</td></tr>
         </table>
       </div>
       <div style="background: #1f2937; padding: 15px; text-align: center; color: white;">
