@@ -126,6 +126,8 @@ export interface Sede {
   telefono?: string;
   horario?: string;
   esPrincipal?: boolean;
+  esNueva?: boolean;
+  fechaInauguracion?: string;
 }
 
 // Propuesta

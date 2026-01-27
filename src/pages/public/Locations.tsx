@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Clock, Navigation } from 'lucide-react';
+import { MapPin, Phone, Clock, Navigation, Sparkles, Calendar } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import MapComponent from '@/components/ui/MapComponent';
 import { Card } from '@/components/common';
@@ -7,10 +7,34 @@ import { SEDES, CONTACTO } from '@/utils/constants';
 import { getWhatsAppUrl } from '@/utils/helpers';
 
 const Locations = () => {
+  // Encontrar sede nueva para el banner
+  const sedeNueva = SEDES.find(s => s.esNueva);
+
   return (
-    <Layout title="Sedes" description="Encuentra nuestras sedes en Puno, Juliaca e Ilave.">
+    <Layout title="Sedes" description="Encuentra nuestras sedes en Puno, Juliaca, Ilave y Ayaviri.">
       {/* Hero */}
       <section className="pt-28 pb-16 gradient-hero text-white">
+        {/* Banner de Inauguración dentro del hero */}
+        {sedeNueva && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black py-3 px-4 mb-6 rounded-lg mx-4 md:mx-auto max-w-4xl shadow-lg"
+          >
+            <div className="flex items-center justify-center gap-2 md:gap-3 flex-wrap text-center">
+              <Sparkles className="w-5 h-5 animate-pulse" />
+              <span className="font-bold">¡NUEVA SEDE!</span>
+              <span className="hidden sm:inline">|</span>
+              <span className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                <strong>Miércoles 28 - 4:00 PM</strong>
+              </span>
+              <span className="hidden sm:inline">|</span>
+              <span>{sedeNueva.direccion}, {sedeNueva.ciudad}</span>
+              <span className="text-sm hidden md:inline">({sedeNueva.referencia})</span>
+            </div>
+          </motion.div>
+        )}
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -54,13 +78,23 @@ const Locations = () => {
                 <Card
                   className={`h-full ${
                     sede.esPrincipal ? 'border-2 border-primary-500' : ''
+                  } ${
+                    sede.esNueva ? 'border-2 border-yellow-500 bg-yellow-50' : ''
                   }`}
                 >
-                  {sede.esPrincipal && (
-                    <span className="inline-block px-3 py-1 bg-primary-100 text-primary-600 text-xs font-semibold rounded-full mb-3">
-                      Sede Principal
-                    </span>
-                  )}
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {sede.esPrincipal && (
+                      <span className="inline-block px-3 py-1 bg-primary-100 text-primary-600 text-xs font-semibold rounded-full">
+                        Sede Principal
+                      </span>
+                    )}
+                    {sede.esNueva && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1 bg-yellow-400 text-black text-xs font-bold rounded-full animate-pulse">
+                        <Sparkles className="w-3 h-3" />
+                        ¡INAUGURACIÓN!
+                      </span>
+                    )}
+                  </div>
 
                   <h3 className="text-xl font-bold text-secondary-900 mb-3">
                     {sede.nombre}

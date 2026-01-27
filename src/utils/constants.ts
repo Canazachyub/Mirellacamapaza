@@ -15,8 +15,8 @@ export const CANDIDATA = {
 
 // Contacto
 export const CONTACTO = {
-  whatsapp: '51964271720',
-  whatsappDisplay: '+51 964 271 720',
+  whatsapp: '51967178956',
+  whatsappDisplay: '+51 967 178 956',
   email: 'dra.mirella.camapaza.4@gmail.com',
   whatsappMessage: 'Hola, me interesa información sobre la candidatura de la Dra. Mirella Camapaza',
 } as const;
@@ -86,6 +86,28 @@ export const SEDES: Sede[] = [
     lat: -16.0833,
     lng: -69.6500,
     esPrincipal: false,
+  },
+  {
+    id: 'ayaviri',
+    nombre: 'Sede Melgar - Ayaviri',
+    direccion: 'Ayaviri',
+    referencia: '',
+    ciudad: 'Ayaviri',
+    lat: -14.8817,
+    lng: -70.5928,
+    esPrincipal: false,
+  },
+  {
+    id: 'puno-melgar',
+    nombre: 'Sede Puno - Jr. Melgar',
+    direccion: 'Jr. Melgar 244',
+    referencia: 'Frente al Colegio La Merced',
+    ciudad: 'Puno',
+    lat: -15.8402,
+    lng: -70.0219,
+    esPrincipal: false,
+    esNueva: true,
+    fechaInauguracion: '2026-01-28T16:00:00',
   },
 ];
 

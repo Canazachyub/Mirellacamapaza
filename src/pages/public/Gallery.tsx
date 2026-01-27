@@ -202,6 +202,27 @@ const Gallery = () => {
     });
   };
 
+  // Convertir URL de Google Drive a URL directa de imagen (tamaño completo)
+  const getDirectImageUrl = (image: GalleryImage) => {
+    // Usar el ID para construir una URL directa que funcione
+    if (image.id) {
+      // Formato más confiable para Google Drive
+      return `https://lh3.googleusercontent.com/d/${image.id}`;
+    }
+    // Fallback al thumbnail si no hay ID
+    return image.thumbnail || image.url;
+  };
+
+  // URL para portadas de álbum (tamaño mediano para mejor rendimiento)
+  const getCoverImageUrl = (image: GalleryImage | undefined) => {
+    if (!image) return '/placeholder-album.jpg';
+    if (image.id) {
+      // Usar formato lh3 que es más confiable
+      return `https://lh3.googleusercontent.com/d/${image.id}=w800`;
+    }
+    return image.thumbnail || image.url;
+  };
+
   const openLightbox = (album: Album, imageIndex: number) => {
     setSelectedAlbum(album);
     setSelectedImageIndex(imageIndex);
@@ -409,11 +430,26 @@ const Gallery = () => {
                         onClick={() => album.images.length > 0 && openLightbox(album, 0)}
                       >
                         <div className="relative h-48 bg-secondary-200 overflow-hidden">
-                          {album.coverImage && album.coverImage !== '/placeholder-album.jpg' ? (
+                          {album.images.length > 0 ? (
                             <img
-                              src={album.coverImage}
+                              src={getCoverImageUrl(album.images[0])}
                               alt={album.name}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              onError={(e) => {
+                                // Intentar diferentes formatos de URL
+                                const target = e.target as HTMLImageElement;
+                                const image = album.images[0];
+                                const currentSrc = target.src;
+
+                                // Intentar formato uc?export=view
+                                if (image.id && !currentSrc.includes('uc?export')) {
+                                  target.src = `https://drive.google.com/uc?export=view&id=${image.id}`;
+                                }
+                                // Luego intentar thumbnail original
+                                else if (image.thumbnail && currentSrc !== image.thumbnail) {
+                                  target.src = image.thumbnail;
+                                }
+                              }}
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-primary-200">
@@ -494,10 +530,25 @@ const Gallery = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              src={selectedAlbum.images[selectedImageIndex]?.url}
+              src={getDirectImageUrl(selectedAlbum.images[selectedImageIndex])}
               alt={selectedAlbum.images[selectedImageIndex]?.name}
               className="max-h-[90vh] max-w-[90vw] object-contain"
               onClick={(e) => e.stopPropagation()}
+              onError={(e) => {
+                // Intentar diferentes formatos de URL
+                const target = e.target as HTMLImageElement;
+                const image = selectedAlbum.images[selectedImageIndex];
+                const currentSrc = target.src;
+
+                // Intentar formato uc?export=view
+                if (image.id && !currentSrc.includes('uc?export')) {
+                  target.src = `https://drive.google.com/uc?export=view&id=${image.id}`;
+                }
+                // Luego intentar thumbnail
+                else if (image.thumbnail && currentSrc !== image.thumbnail) {
+                  target.src = image.thumbnail;
+                }
+              }}
             />
 
             {/* Image info */}
