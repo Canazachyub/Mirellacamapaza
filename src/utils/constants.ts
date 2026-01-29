@@ -350,6 +350,7 @@ export const NAV_ITEMS: NavItem[] = [
 // Navegación dashboard
 export const DASHBOARD_NAV: NavItem[] = [
   { label: 'Dashboard', href: '/admin', icon: 'LayoutDashboard' },
+  { label: 'Mapa Electoral', href: '/admin/mapa-electoral', icon: 'Map' },
   { label: 'Mensajes', href: '/admin/mensajes', icon: 'MessageSquare' },
   { label: 'Afiliados', href: '/admin/afiliados', icon: 'Users' },
   { label: 'Voluntarios', href: '/admin/voluntarios', icon: 'UserPlus' },

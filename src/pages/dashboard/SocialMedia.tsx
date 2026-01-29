@@ -23,7 +23,7 @@ const FACEBOOK_PAGES = [
     id: 'doctora',
     name: 'Dra. Mirella Camapaza',
     description: 'Página oficial de campaña',
-    url: 'https://www.facebook.com/DraMirellaCamapazaAhoraNacion/',
+    url: 'https://www.facebook.com/MirellaCamapazaAhoraNacion',
     icon: Award,
     color: 'bg-primary-100 text-primary-600',
   },
@@ -367,6 +367,16 @@ const SocialMedia = () => {
                 <ExternalLink className="w-4 h-4 text-secondary-400 ml-auto" />
               </a>
               <a
+                href="https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=748911570874585&nav_source=no_referrer"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-3 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors"
+              >
+                <Facebook className="w-5 h-5 text-indigo-600" />
+                <span className="text-sm font-medium text-secondary-900">Facebook Ads Manager</span>
+                <ExternalLink className="w-4 h-4 text-secondary-400 ml-auto" />
+              </a>
+              <a
                 href="https://www.instagram.com/accounts/login/"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -384,6 +394,16 @@ const SocialMedia = () => {
               >
                 <Music2 className="w-5 h-5 text-gray-900" />
                 <span className="text-sm font-medium text-secondary-900">TikTok Creator Center</span>
+                <ExternalLink className="w-4 h-4 text-secondary-400 ml-auto" />
+              </a>
+              <a
+                href="https://ads.tiktok.com/business/creativecenter/pc/en"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-3 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors"
+              >
+                <Music2 className="w-5 h-5 text-cyan-600" />
+                <span className="text-sm font-medium text-secondary-900">TikTok Ads Creative</span>
                 <ExternalLink className="w-4 h-4 text-secondary-400 ml-auto" />
               </a>
               <a

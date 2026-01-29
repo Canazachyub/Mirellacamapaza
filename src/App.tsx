@@ -29,6 +29,7 @@ const DashboardSettings = lazy(() => import('@/pages/dashboard/Settings'));
 const DashboardGallery = lazy(() => import('@/pages/dashboard/Gallery'));
 const DashboardSocialMedia = lazy(() => import('@/pages/dashboard/SocialMedia'));
 const DashboardSentiments = lazy(() => import('@/pages/dashboard/Sentiments'));
+const DashboardElectoralMap = lazy(() => import('@/pages/dashboard/ElectoralMap'));
 
 // Loading component
 const PageLoader = () => (
@@ -159,6 +160,14 @@ function App() {
           element={
             <ProtectedRoute>
               <DashboardSentiments />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/mapa-electoral"
+          element={
+            <ProtectedRoute>
+              <DashboardElectoralMap />
             </ProtectedRoute>
           }
         />

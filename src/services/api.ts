@@ -14,10 +14,13 @@ import type {
   ContactFormData,
   Sentiment,
   GeminiResponse,
+  BaseTerritorial,
+  BaseStats,
+  BaseFormData,
 } from '@/types';
 
 // URL de la API - siempre usa URL directa (Google Apps Script maneja CORS)
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3D2G69r1GSMPeCMQnQDaCXYqjOail67fFJlhZF1HyiroMZIz-vYmKSgQKuO9A9Sue/exec';
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyGs5183XyRNEs_tMBZDJxpgoBtfHngrCaBvoZl3gFGA80Fgkq1m1H-PzGYx_mpo0CNbw/exec';
 const API_URL = import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL || GOOGLE_APPS_SCRIPT_URL;
 
 // Helper para hacer peticiones GET con fetch (compatible con Google Apps Script)
@@ -374,3 +377,32 @@ export const generateAIResponse = (data: {
   contexto?: string;
   tono?: 'profesional' | 'amigable' | 'neutral';
 }) => post<GeminiResponse>('generateAIResponse', data);
+
+// ============================================
+// BASES TERRITORIALES - Coordinadores por zona
+// ============================================
+
+export interface GetBasesParams {
+  provincia?: string;
+  distrito?: string;
+  estado?: 'Activa' | 'En_Formacion' | 'Pendiente' | 'Inactiva';
+  prioridad?: 'Alta' | 'Media' | 'Baja';
+}
+
+export const getBases = (params?: GetBasesParams) => {
+  const queryParams: Record<string, string> = {};
+  if (params?.provincia) queryParams.provincia = params.provincia;
+  if (params?.distrito) queryParams.distrito = params.distrito;
+  if (params?.estado) queryParams.estado = params.estado;
+  if (params?.prioridad) queryParams.prioridad = params.prioridad;
+  return get<BaseTerritorial[]>('getBases', queryParams);
+};
+
+export const getBaseStats = () => get<BaseStats>('getBaseStats');
+
+export const addBase = (data: BaseFormData) => post<{ id: string }>('addBase', data);
+
+export const updateBase = (id: string, data: Partial<BaseFormData>) =>
+  post<void>('updateBase', { id, ...data });
+
+export const deleteBase = (id: string) => post<void>('deleteBase', { id });

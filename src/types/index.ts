@@ -281,3 +281,49 @@ export interface GeminiResponse {
   tono: string;
   puntosClave: string[];
 }
+
+// Base Territorial (Coordinadores por zona)
+export interface BaseTerritorial {
+  ID: string;
+  Fecha: string;
+  Provincia: string;
+  Distrito: string;
+  TipoBase: 'Sede' | 'Punto_Contacto' | 'Comunidad';
+  Responsable: string;
+  Telefono: string;
+  Estado: 'Activa' | 'En_Formacion' | 'Pendiente' | 'Inactiva';
+  Afiliados: number;
+  Voluntarios: number;
+  Competencia: string;
+  NotasCompetencia: string;
+  Prioridad: 'Alta' | 'Media' | 'Baja';
+  Notas: string;
+}
+
+// Estadísticas de Bases
+export interface BaseStats {
+  totalBases: number;
+  activas: number;
+  enFormacion: number;
+  pendientes: number;
+  totalAfiliados: number;
+  totalVoluntarios: number;
+  porProvincia: Record<string, { bases: number; afiliados: number; voluntarios: number }>;
+  porPrioridad: { Alta: number; Media: number; Baja: number };
+}
+
+// Formulario de Base
+export interface BaseFormData {
+  provincia: string;
+  distrito: string;
+  tipoBase: 'Sede' | 'Punto_Contacto' | 'Comunidad';
+  responsable: string;
+  telefono: string;
+  estado: 'Activa' | 'En_Formacion' | 'Pendiente' | 'Inactiva';
+  afiliados?: number;
+  voluntarios?: number;
+  competencia?: string;
+  notasCompetencia?: string;
+  prioridad: 'Alta' | 'Media' | 'Baja';
+  notas?: string;
+}
