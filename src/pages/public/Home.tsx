@@ -4,7 +4,7 @@ import Proposals from '@/components/sections/Proposals';
 import Documents from '@/components/sections/Documents';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { MapPin, Users, Heart, ArrowRight } from 'lucide-react';
+import { MapPin, Users, Heart, ArrowRight, ClipboardCheck, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/common';
 import { SEDES, CANDIDATA } from '@/utils/constants';
 
@@ -130,6 +130,41 @@ const Home = () => {
                 </Button>
               </Link>
             </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Consulta Miembro de Mesa - ONPE */}
+      <section className="py-12 lg:py-16 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500">
+        <div className="container-custom">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col lg:flex-row items-center justify-between gap-6"
+          >
+            <div className="flex items-center gap-4 text-white">
+              <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center flex-shrink-0">
+                <ClipboardCheck className="w-8 h-8" />
+              </div>
+              <div>
+                <h3 className="text-2xl md:text-3xl font-bold">
+                  ¿Eres Miembro de Mesa?
+                </h3>
+                <p className="text-white/90 text-lg">
+                  Consulta si fuiste elegido para las Elecciones Generales 2026
+                </p>
+              </div>
+            </div>
+            <a
+              href="https://consultaelectoral.onpe.gob.pe/inicio"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-white text-orange-600 px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+            >
+              <span>Consultar Ahora</span>
+              <ExternalLink className="w-5 h-5" />
+            </a>
           </motion.div>
         </div>
       </section>
