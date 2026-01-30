@@ -34,9 +34,9 @@ export const REDES_SOCIALES = {
     nombre: 'Instagram',
   },
   facebook: {
-    url: 'https://www.facebook.com/ahoranacionilave/',
+    url: 'https://www.facebook.com/MirellaCamapazaAhoraNacion',
     nombre: 'Facebook',
-    pagina: 'Ahora Nación Ilave',
+    pagina: 'Dra. Mirella Camapaza',
   },
   whatsappGrupo: {
     url: 'https://chat.whatsapp.com/IUEaHeI5BcQKk9esAC4xE3',
