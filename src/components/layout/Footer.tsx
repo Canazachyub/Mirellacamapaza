@@ -5,6 +5,8 @@ import {
   Phone,
   Mail,
   MapPin,
+  Youtube,
+  Twitter,
 } from 'lucide-react';
 import { CANDIDATA, CONTACTO, REDES_SOCIALES, NAV_ITEMS } from '@/utils/constants';
 import { getWhatsAppUrl } from '@/utils/helpers';
@@ -147,6 +149,22 @@ const Footer = () => {
                 className="w-10 h-10 rounded-full bg-secondary-800 flex items-center justify-center text-secondary-300 hover:bg-primary-600 hover:text-white transition-all"
               >
                 <TikTokIcon />
+              </a>
+              <a
+                href="https://www.youtube.com/@MirellaCamapazaQuispe"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-secondary-800 flex items-center justify-center text-secondary-300 hover:bg-red-600 hover:text-white transition-all"
+              >
+                <Youtube className="w-5 h-5" />
+              </a>
+              <a
+                href="https://x.com/QuispeDra86276"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-secondary-800 flex items-center justify-center text-secondary-300 hover:bg-slate-700 hover:text-white transition-all"
+              >
+                <Twitter className="w-5 h-5" />
               </a>
             </div>
 
