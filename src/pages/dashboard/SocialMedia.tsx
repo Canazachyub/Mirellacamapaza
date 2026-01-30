@@ -12,6 +12,8 @@ import {
   User,
   Building2,
   Award,
+  Youtube,
+  Twitter,
 } from 'lucide-react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, Button } from '@/components/common';
@@ -414,6 +416,26 @@ const SocialMedia = () => {
               >
                 <Users className="w-5 h-5 text-green-600" />
                 <span className="text-sm font-medium text-secondary-900">Grupo de Voluntariado</span>
+                <ExternalLink className="w-4 h-4 text-secondary-400 ml-auto" />
+              </a>
+              <a
+                href="https://www.youtube.com/@MirellaCamapazaQuispe"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
+              >
+                <Youtube className="w-5 h-5 text-red-600" />
+                <span className="text-sm font-medium text-secondary-900">Canal de YouTube</span>
+                <ExternalLink className="w-4 h-4 text-secondary-400 ml-auto" />
+              </a>
+              <a
+                href="https://x.com/QuispeDra86276"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <Twitter className="w-5 h-5 text-slate-900" />
+                <span className="text-sm font-medium text-secondary-900">X (Twitter)</span>
                 <ExternalLink className="w-4 h-4 text-secondary-400 ml-auto" />
               </a>
             </div>
