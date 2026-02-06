@@ -1,1 +1,0 @@
-import{j as d}from"./ui-BChFafQN.js";import{c as o}from"./index-CVZ54knL.js";const s=({children:s,hover:a=!1,padding:e="md",className:i,...r})=>d.jsx("div",{className:o("bg-white rounded-xl shadow-lg overflow-hidden",a&&"hover:shadow-xl transition-shadow duration-300",{none:"",sm:"p-3",md:"p-4 md:p-6",lg:"p-6 md:p-8"}[e],i),...r,children:s});export{s as C};
