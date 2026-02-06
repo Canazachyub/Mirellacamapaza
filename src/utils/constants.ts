@@ -193,6 +193,95 @@ export const PROPUESTAS: Proposal[] = [
   },
 ];
 
+// Propuestas del Plan de Gobierno - Ahora Nación (2026-2031)
+export const PROPUESTAS_PARTIDO: Proposal[] = [
+  {
+    id: 'partido-salud',
+    titulo: 'Salud y Modernización Sanitaria',
+    descripcion: 'Transformación integral del sistema de salud con infraestructura moderna y digitalización total.',
+    categoria: 'Salud',
+    icono: 'HeartPulse',
+    detalles: [
+      'Construcción o mejora de 500 centros de salud de primer nivel',
+      'Digitalización total de historias clínicas interoperables',
+      'Meta de acceso universal a atención primaria',
+      'Objetivo de eliminar desnutrición crónica infantil',
+    ],
+  },
+  {
+    id: 'partido-industria',
+    titulo: 'Desarrollo Productivo e Industrialización',
+    descripcion: 'Impulsar la industrialización regional con parques industriales y un sistema portuario integrado.',
+    categoria: 'Desarrollo Económico',
+    icono: 'Factory',
+    detalles: [
+      'Parques industriales en todas las regiones',
+      'Sistema Portuario Integrado para exportaciones',
+      'Descentralización productiva para impulsar economías regionales',
+    ],
+  },
+  {
+    id: 'partido-infraestructura',
+    titulo: 'Infraestructura y Conectividad',
+    descripcion: 'Red de transporte moderno con ferrocarriles y mejora de la red vial a nivel nacional.',
+    categoria: 'Infraestructura',
+    icono: 'TrainFront',
+    detalles: [
+      'Ferrocarriles Lima–Ica y Lima–Barranca',
+      'Mantenimiento de red vial vecinal',
+      'Fuerte inversión en infraestructura logística',
+    ],
+  },
+  {
+    id: 'partido-seguridad',
+    titulo: 'Seguridad y Justicia',
+    descripcion: 'Reforma integral del sistema de seguridad ciudadana con tecnología e integración institucional.',
+    categoria: 'Seguridad',
+    icono: 'Shield',
+    detalles: [
+      'Reforma del sistema de seguridad ciudadana',
+      'Sistema informático integrado entre PNP, Fiscalía y Poder Judicial',
+      'Nueva ley del Sistema Nacional de Seguridad Ciudadana',
+      'Pruebas de polígrafo en admisión policial',
+    ],
+  },
+  {
+    id: 'partido-energia',
+    titulo: 'Energía y Sostenibilidad',
+    descripcion: 'Transición energética con renovables e hidrógeno verde para un futuro sostenible.',
+    categoria: 'Medio Ambiente',
+    icono: 'Zap',
+    detalles: [
+      '30% de energías renovables en sector público',
+      'Proyectos piloto de hidrógeno verde',
+      'Transición energética progresiva',
+    ],
+  },
+  {
+    id: 'partido-vivienda',
+    titulo: 'Vivienda y Formalización',
+    descripcion: 'Formalización masiva de la propiedad urbana y reubicación de viviendas en zonas de riesgo.',
+    categoria: 'Vivienda',
+    icono: 'Home',
+    detalles: [
+      '500,000 títulos de propiedad urbana',
+      'Reubicación de viviendas en zonas de riesgo',
+    ],
+  },
+  {
+    id: 'partido-economia',
+    titulo: 'Gestión Económica del Estado',
+    descripcion: 'Manejo responsable de recursos con un Fondo Soberano y descentralización institucional.',
+    categoria: 'Economía',
+    icono: 'Landmark',
+    detalles: [
+      'Fondo Soberano de Riqueza con excedentes fiscales y recursos extractivos',
+      'Descentralización con fortalecimiento institucional',
+      'Inversión sostenida en infraestructura',
+    ],
+  },
+];
+
 // Colores del partido
 export const COLORES = {
   primario: '#dc2626',
