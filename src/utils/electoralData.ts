@@ -269,7 +269,7 @@ export const RESULTADOS_2021: ResultadoEleccion2021[] = [
   {
     partido: 'Acción Popular',
     candidatos: [
-      { nombre: 'Jorge Luis Flores Ancachi', numero: 1, votos: 23539, elegido: false },
+      { nombre: 'Jorge Luis Flores Ancachi', numero: 1, votos: 23539, elegido: true },
       { nombre: 'Armida Isia Larico', numero: 2, votos: 12073, elegido: false },
       { nombre: 'Elmer Quispe Cahui', numero: 3, votos: 22646, elegido: false },
       { nombre: 'Maria Lourdes Llano Flores', numero: 4, votos: 10267, elegido: false },
@@ -284,14 +284,14 @@ export const RESULTADOS_2021: ResultadoEleccion2021[] = [
       { nombre: '', numero: 2, votos: 1724, elegido: false },
       { nombre: 'Porfirio Vargas Quispe', numero: 3, votos: 872, elegido: false },
       { nombre: 'Yenny Velasquez Calla', numero: 4, votos: 2569, elegido: false },
-      { nombre: 'Jorge Enrique Sotomayor Perales', numero: 5, votos: 4629, elegido: true },
+      { nombre: 'Jorge Enrique Sotomayor Perales', numero: 5, votos: 4629, elegido: false },
       { nombre: 'Dina Natty Romero Salcedo', numero: 6, votos: 437, elegido: false },
     ],
   },
   {
     partido: 'Juntos por el Perú',
     candidatos: [
-      { nombre: 'Luis Butron Castillo', numero: 1, votos: 10496, elegido: true },
+      { nombre: 'Luis Butron Castillo', numero: 1, votos: 10496, elegido: false },
       { nombre: 'Elisabeth Vilca Ticona', numero: 2, votos: 3615, elegido: false },
       { nombre: 'Gonzalo Gregorio Salas Charca', numero: 3, votos: 2147, elegido: false },
       { nombre: 'Patricia del Carmen Barra Hinojosa', numero: 4, votos: 854, elegido: false },
