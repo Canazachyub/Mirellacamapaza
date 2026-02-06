@@ -1,5 +1,5 @@
-// Datos electorales de la Región Puno - Elecciones 2026
-// Total: 922,016 electores en 13 provincias y 110 distritos
+// Datos electorales de la Región Puno
+// Padrón 2021: 922,016 electores | Población Electoral 2026: 963,489 (Fuente: RENIEC)
 
 export interface DistritoElectoral {
   provincia: string;
@@ -218,7 +218,7 @@ export const PROVINCE_LOCATIONS: Record<string, { lat: number; lng: number }> = 
   "YUNGUYO": { lat: -16.2472, lng: -69.0928 }
 };
 
-// Totales regionales
+// Totales regionales (Padrón 2021 para detalle distrital)
 export const REGIONAL_TOTALS = {
   electores: 922016,
   varones: 456030,
@@ -228,6 +228,203 @@ export const REGIONAL_TOTALS = {
   provincias: 13,
   distritos: 110
 };
+
+// Población Electoral 2026 por provincia (Fuente: RENIEC)
+export const ELECTORES_2026: Record<string, number> = {
+  "SAN ROMAN": 229360,
+  "PUNO": 183277,
+  "AZANGARO": 103000,
+  "CHUCUITO": 62630,
+  "HUANCANE": 57373,
+  "MELGAR": 57065,
+  "EL COLLAO": 53915,
+  "CARABAYA": 51592,
+  "SANDIA": 46947,
+  "LAMPA": 38508,
+  "YUNGUYO": 31874,
+  "SAN ANTONIO DE PUTINA": 24638,
+  "MOHO": 23310,
+};
+
+export const TOTAL_ELECTORES_2026 = 963489;
+
+// Resultados Elecciones Congresales 2021 - Puno
+export interface ResultadoEleccion2021 {
+  partido: string;
+  candidatos: { nombre: string; numero: number; votos: number; elegido: boolean }[];
+}
+
+export const RESULTADOS_2021: ResultadoEleccion2021[] = [
+  {
+    partido: 'Perú Libre',
+    candidatos: [
+      { nombre: 'Flavio Cruz Mamani', numero: 1, votos: 30025, elegido: true },
+      { nombre: 'Nancy Rossel Angles', numero: 2, votos: 16814, elegido: false },
+      { nombre: 'Oscar Zea Choquechambi', numero: 3, votos: 34450, elegido: true },
+      { nombre: 'Marilu Zulema Yanarico Apaza', numero: 4, votos: 4705, elegido: false },
+      { nombre: 'Wilson Rusbel Quispe Mamani', numero: 5, votos: 28343, elegido: true },
+      { nombre: '', numero: 6, votos: 913, elegido: false },
+    ],
+  },
+  {
+    partido: 'Acción Popular',
+    candidatos: [
+      { nombre: 'Jorge Luis Flores Ancachi', numero: 1, votos: 23539, elegido: false },
+      { nombre: 'Armida Isia Larico', numero: 2, votos: 12073, elegido: false },
+      { nombre: 'Elmer Quispe Cahui', numero: 3, votos: 22646, elegido: false },
+      { nombre: 'Maria Lourdes Llano Flores', numero: 4, votos: 10267, elegido: false },
+      { nombre: 'Carlos Javier Zeballos Madariaga', numero: 5, votos: 23883, elegido: true },
+      { nombre: 'Danitza Frisancho Berrios', numero: 6, votos: 3112, elegido: false },
+    ],
+  },
+  {
+    partido: 'Podemos Perú',
+    candidatos: [
+      { nombre: 'Wilbert Mariano Portugal Menendez', numero: 1, votos: 2833, elegido: false },
+      { nombre: '', numero: 2, votos: 1724, elegido: false },
+      { nombre: 'Porfirio Vargas Quispe', numero: 3, votos: 872, elegido: false },
+      { nombre: 'Yenny Velasquez Calla', numero: 4, votos: 2569, elegido: false },
+      { nombre: 'Jorge Enrique Sotomayor Perales', numero: 5, votos: 4629, elegido: true },
+      { nombre: 'Dina Natty Romero Salcedo', numero: 6, votos: 437, elegido: false },
+    ],
+  },
+  {
+    partido: 'Juntos por el Perú',
+    candidatos: [
+      { nombre: 'Luis Butron Castillo', numero: 1, votos: 10496, elegido: true },
+      { nombre: 'Elisabeth Vilca Ticona', numero: 2, votos: 3615, elegido: false },
+      { nombre: 'Gonzalo Gregorio Salas Charca', numero: 3, votos: 2147, elegido: false },
+      { nombre: 'Patricia del Carmen Barra Hinojosa', numero: 4, votos: 854, elegido: false },
+      { nombre: 'Richard Freddy Gonzales Salcedo', numero: 5, votos: 2524, elegido: false },
+      { nombre: '', numero: 6, votos: 195, elegido: false },
+    ],
+  },
+];
+
+// Datos de participación 2021
+export const PARTICIPACION_2021 = {
+  electoresHabiles: 922016,
+  participacion: 755332,
+  porcentaje: 81.92,
+};
+
+// Medios de comunicación de Puno - COMPLETO (Fuente: E:\Base de datos\Medios_Comunicacion_Puno.xlsx)
+export interface MedioComunicacion {
+  tipo: string;
+  medio: string;
+  frecuencia: string;
+  direccion: string;
+  telefono: string;
+  email: string;
+  web: string;
+  facebook: string;
+  instagram: string;
+  twitter: string;
+  tiktok: string;
+  youtube: string;
+  notas: string;
+}
+
+export const MEDIOS_COMUNICACION: MedioComunicacion[] = [
+  // RADIOS (9)
+  { tipo: 'Radio', medio: 'Radio RPP Juliaca', frecuencia: '88.9 FM', direccion: '', telefono: '+51 1 215 0200 (central Lima)', email: '', web: 'https://rpp.pe', facebook: '@rppnoticias', instagram: '@rppnoticias', twitter: '@RPPNoticias', tiktok: '', youtube: '', notas: 'Red nacional. Sin número exclusivo para Juliaca' },
+  { tipo: 'Radio', medio: 'Radio San Pedro Juliaca', frecuencia: '98.1 FM', direccion: 'Jr. Moquegua 565, Juliaca', telefono: '+51 914 200 404 (cabina/WhatsApp)', email: '', web: 'http://www.radiosanpedrofm.com/', facebook: '@RadioSanPedro98.1FM', instagram: '', twitter: '', tiktok: '', youtube: '', notas: '' },
+  { tipo: 'Radio', medio: 'Radio Ritmo Romántica Juliaca', frecuencia: '98.9 FM', direccion: 'Jr. Justo Pastor Dávila 197, Chorrillos, Lima (central)', telefono: '+51 949 100 636 (WhatsApp) / +51 617 6600 (fijo)', email: 'ritmoromanticafm@gmail.com', web: 'https://www.ritmoromantica.pe', facebook: '@RadioRitmoRomantica', instagram: '@radioritmoranticafm', twitter: '@Ritmo_Romantica', tiktok: '@radioritmorantica', youtube: '@RitmoromanticaPeru', notas: 'Red CRP, central nacional' },
+  { tipo: 'Radio', medio: 'Radio Karibeña Juliaca', frecuencia: '94.9 FM', direccion: 'Av. Guardia Civil 674, Chorrillos, Lima (central)', telefono: '(01) 251-2622 (cabina) / +51 900 207 785 (WhatsApp)', email: 'ventas@corporacionuniversal.pe', web: 'https://lakaribena.com.pe', facebook: 'Radio Karibeña', instagram: '@lakaribenaperu', twitter: '@karibenape', tiktok: '@lakaribena', youtube: '', notas: 'Corporación Universal' },
+  { tipo: 'Radio', medio: 'Radio Las Vegas Juliaca', frecuencia: '94.3 FM', direccion: 'Jr. Carlos Dreyer 110, Puno', telefono: '+51 953 300 095 (cabina)', email: '', web: 'http://www.radiolasvegasjuliaca.com', facebook: 'radiolasvegas.juliacateactiva', instagram: '', twitter: '', tiktok: '', youtube: '', notas: 'Eslogan: Te activa' },
+  { tipo: 'Radio', medio: 'Radio Sol de los Andes', frecuencia: '104.5 FM / 1460 AM', direccion: 'Jr. 2 de Mayo N° 209, Of. 406, Juliaca', telefono: '051-331414 / +51 978 591 586 / +51 951 540 453 (denuncias)', email: 'info@radiosoldelosandes.com.pe', web: 'https://www.radiosoldelosandes.com.pe', facebook: '@Radiosoldelosandesoficial', instagram: '@radio.soldelosandes', twitter: '', tiktok: '', youtube: '', notas: 'La radio que vive en el corazón del pueblo' },
+  { tipo: 'Radio', medio: 'Radio Universal (Pusi – Huancané)', frecuencia: '101.7 FM', direccion: '', telefono: '+51 950 771 176', email: '', web: 'https://radiotvuniversalpusi.blogspot.com', facebook: '', instagram: '', twitter: '', tiktok: '', youtube: '', notas: 'Sin redes sociales oficiales' },
+  { tipo: 'Radio', medio: 'Radio Ilave', frecuencia: '', direccion: 'Av. Puno 578, barrio Cruzani, Ilave, El Collao', telefono: '', email: '', web: '', facebook: '', instagram: '', twitter: '', tiktok: '', youtube: '', notas: 'RUC: 20448173144 – Corp. Telecomunicaciones del Sur S.A.C.' },
+  { tipo: 'Radio', medio: 'Radio Yunguyo', frecuencia: '98.1 FM', direccion: 'Yunguyo, Puno', telefono: '', email: '', web: 'https://www.radioyunguyo.com', facebook: '', instagram: '', twitter: '', tiktok: '', youtube: '', notas: 'La radio del pueblo aymara' },
+  // TELEVISIÓN (8)
+  { tipo: 'TV', medio: 'TV Latina Puno', frecuencia: '2.1 HD – 20 UHF', direccion: '', telefono: '', email: '', web: '', facebook: 'TV Latina Puno (fb.com/61558585286047)', instagram: '', twitter: '', tiktok: '', youtube: '', notas: 'Red nacional Latina' },
+  { tipo: 'TV', medio: 'TV UNA – Univ. Nacional del Altiplano', frecuencia: '', direccion: '', telefono: '', email: '', web: 'https://portal.unap.edu.pe', facebook: '@tvunaradio', instagram: '', twitter: '', tiktok: '', youtube: '', notas: 'Señal integrada a plataforma digital UNA' },
+  { tipo: 'TV', medio: 'TV Perú – Canal 7', frecuencia: '7.1 – 16 UHF', direccion: '', telefono: '(01) 615-7777 (IRTP Lima)', email: '', web: 'https://www.tvperu.gob.pe', facebook: '', instagram: '', twitter: '', tiktok: '', youtube: '', notas: 'Filial Puno, contacto vía central IRTP' },
+  { tipo: 'TV', medio: 'TV Global Puno', frecuencia: '9.1 – 22 UHF', direccion: '', telefono: '', email: '', web: '', facebook: '', instagram: '', twitter: '', tiktok: '', youtube: '', notas: 'Señal nacional Grupo ATV' },
+  { tipo: 'TV', medio: 'CTC HD (Juliaca)', frecuencia: '23.1 – 18 UHF', direccion: '', telefono: '', email: '', web: 'https://ctc.pe', facebook: 'CTC.pe', instagram: '@ctc.pe', twitter: '', tiktok: '@CTC.PE', youtube: '@ctcpe', notas: 'Compañía de TV Cusqueña' },
+  { tipo: 'TV', medio: 'Satellite Latina HD (Juliaca)', frecuencia: '2.1 – 20 UHF', direccion: '', telefono: '', email: '', web: 'https://www.latina.pe', facebook: '', instagram: '', twitter: '@Latina_pe', tiktok: '', youtube: '', notas: 'Repetidor local de Latina TV' },
+  { tipo: 'TV', medio: 'Global TV HD (Juliaca)', frecuencia: '5.1 – 22 UHF', direccion: '', telefono: '', email: '', web: '', facebook: '', instagram: '', twitter: '', tiktok: '', youtube: '', notas: 'Señal nacional Grupo ATV' },
+  { tipo: 'TV', medio: 'Panamericana HD / América HD / La Tele', frecuencia: '', direccion: '', telefono: '', email: '', web: '', facebook: '', instagram: '', twitter: '', tiktok: '', youtube: '', notas: 'Contactos: centrales de América TV / Panamericana TV / ATV – Lima' },
+  // PRENSA (3)
+  { tipo: 'Prensa', medio: 'Diario Sin Fronteras – Puno', frecuencia: '', direccion: '', telefono: '', email: '', web: 'https://diariosinfronteras.com.pe/category/puno', facebook: 'Diario Sin Fronteras', instagram: '', twitter: '', tiktok: '', youtube: '', notas: 'Sin WhatsApp publicado para Puno' },
+  { tipo: 'Prensa', medio: 'Diario Correo Puno', frecuencia: '', direccion: 'Jr. Tacna 121, interior 516, Puno', telefono: '+51 950 727 666 / +51 951 960 688 / (051) 363 515 / +51 942 400 667 (WhatsApp denuncias)', email: 'correopuno@gmail.com', web: 'https://diariocorreo.pe/edicion/puno', facebook: '', instagram: '', twitter: '@diariocorreo', tiktok: '', youtube: '', notas: 'Central nacional: +51 1 708 9999' },
+  { tipo: 'Prensa', medio: 'Diario La República – Puno', frecuencia: '', direccion: 'Jr. Camaná 320, Cercado de Lima (central)', telefono: '(01) 711 6000 (central)', email: 'jennifer.sernaque@glr.pe (comercial)', web: 'https://larepublica.pe', facebook: '', instagram: '', twitter: '', tiktok: '', youtube: '', notas: 'Corresponsal Puno: Liubomir Fernández' },
+  // DIGITAL (7)
+  { tipo: 'Digital', medio: 'PBO – Radio y TV Online', frecuencia: '', direccion: 'Av. Angamos Oeste 651, Miraflores, Lima', telefono: '+51 1 644 9550 (WhatsApp/central)', email: '', web: 'https://pbo.pe', facebook: 'facebook.com/pboperu', instagram: '@pbo_digital', twitter: '@pboperu', tiktok: '', youtube: '@pbo', notas: '' },
+  { tipo: 'Digital', medio: 'Puno Noticias', frecuencia: '', direccion: '', telefono: '', email: '', web: 'https://punonoticias.pe', facebook: 'Puno Noticias', instagram: 'Puno Noticias', twitter: 'Puno Noticias', tiktok: '', youtube: '', notas: '' },
+  { tipo: 'Digital', medio: 'Puno En Línea', frecuencia: '', direccion: '', telefono: '', email: '', web: '', facebook: 'facebook.com/PunoEnLinea', instagram: '', twitter: '', tiktok: '', youtube: '', notas: '' },
+  { tipo: 'Digital', medio: 'Puno al Día', frecuencia: '', direccion: '', telefono: '', email: '', web: '', facebook: 'Somos Puno Al Día', instagram: '', twitter: '', tiktok: '', youtube: '', notas: '' },
+  { tipo: 'Digital', medio: 'Juliaca al Día', frecuencia: '', direccion: '', telefono: '', email: '', web: '', facebook: 'facebook.com/Juliacaaldia', instagram: '', twitter: '', tiktok: '', youtube: '', notas: '' },
+  { tipo: 'Digital', medio: 'Altiplano Digital', frecuencia: '', direccion: '', telefono: '', email: '', web: '', facebook: '', instagram: '', twitter: '', tiktok: '', youtube: '', notas: 'Solo referencia nominal, sin web/RS oficiales claras' },
+  { tipo: 'Digital', medio: 'Portal Puno / Juliaca Informa', frecuencia: '', direccion: '', telefono: '', email: '', web: '', facebook: '', instagram: '', twitter: '', tiktok: '', youtube: '', notas: 'Solo referencia nominal, sin contactos formales' },
+];
+
+// Organizaciones sociales de Puno - COMPLETO (Fuente: E:\Base de datos\Organizaciones_Sociales_Puno.xlsx)
+export interface OrganizacionSocial {
+  categoria: string;
+  nombre: string;
+  direccion: string;
+  telefono: string;
+  email: string;
+  facebookWeb: string;
+  descripcion: string;
+}
+
+export const ORGANIZACIONES_SOCIALES: OrganizacionSocial[] = [
+  // PROTECCIÓN ANIMAL (3)
+  { categoria: 'Protección Animal', nombre: 'Escuadrón Patitas Puno', direccion: 'Clínica Veterinaria Scooby Doo - Av. El Sol N° 992', telefono: '964345090 / 915233380 / 051 774492', email: '', facebookWeb: 'Escuadrón patitas PUNO - PERÚ', descripcion: '250+ perros y gatos rescatados, esterilización, tratamiento y adopción' },
+  { categoria: 'Protección Animal', nombre: 'Ángeles Sin Voz Puno', direccion: '', telefono: '', email: '', facebookWeb: '@AngelesSinVozPUNO', descripcion: 'Rescate y asistencia a animales' },
+  { categoria: 'Protección Animal', nombre: 'Rescate Protección de Animales Región PUNO - JULIACA', direccion: '', telefono: '', email: '', facebookWeb: 'Grupo en Facebook', descripcion: 'Rescate, protección, adopción y búsqueda de animales' },
+  // ONG - AMBIENTE/DESARROLLO (8)
+  { categoria: 'ONG - Ambiente/Desarrollo', nombre: 'SUMA MARKA - ONGD', direccion: '', telefono: '051-363236', email: '', facebookWeb: '', descripcion: 'Ambiente/Género' },
+  { categoria: 'ONG - Ambiente/Desarrollo', nombre: 'Centro de Capacitación Campesina de Puno (C.C.C.P.)', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Agropecuario/Ambiente/Gobernabilidad' },
+  { categoria: 'ONG - Ambiente/Desarrollo', nombre: 'Centro de Desarrollo Ambiental y Social (CEDAS)', direccion: 'Av. La Torre N° 346', telefono: '951618861', email: '', facebookWeb: '', descripcion: 'Ambiente' },
+  { categoria: 'ONG - Ambiente/Desarrollo', nombre: 'Centro de Investigación de Recursos Naturales y Medio Ambiente (CIRNMA)', direccion: 'Parque Industrial Salcedo', telefono: '051 366029', email: '', facebookWeb: '', descripcion: 'Recursos Naturales/Medio Ambiente' },
+  { categoria: 'ONG - Ambiente/Desarrollo', nombre: 'Centro de Desarrollo Humano (CEDEH)', direccion: 'Jr. Deza N° 767 Int. 02', telefono: '369146', email: '', facebookWeb: '', descripcion: 'Desarrollo Humano' },
+  { categoria: 'ONG - Ambiente/Desarrollo', nombre: 'CIDCSA PERÚ', direccion: 'Pj. Simón Bolívar N° 125 Barrio Chanu Chanu', telefono: '980151631', email: '', facebookWeb: '', descripcion: 'Ambiente/Inclusión Social' },
+  { categoria: 'ONG - Ambiente/Desarrollo', nombre: 'CIDISURP', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Ambiente/Educación/Salud' },
+  { categoria: 'ONG - Ambiente/Desarrollo', nombre: 'CEPRODA - PERÚ', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Agropecuario/Género/Gobernabilidad' },
+  // ONG - CULTURA/EDUCACIÓN (4)
+  { categoria: 'ONG - Cultura/Educación', nombre: 'Asociación Qolla Aymara', direccion: '', telefono: '+51 997767129', email: '', facebookWeb: '', descripcion: 'Cultura/Género' },
+  { categoria: 'ONG - Cultura/Educación', nombre: 'Asociación Suma Qamaña para la Educación y Desarrollo Sostenible', direccion: 'Mza. 8 Lote 22 Urb. Aziruni I Etapa', telefono: '051 367729', email: '', facebookWeb: '', descripcion: 'Educación/Desarrollo Sostenible' },
+  { categoria: 'ONG - Cultura/Educación', nombre: 'SUMAQ-PERÚ', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Formación Agropecuaria/Artesanal/Cultural' },
+  { categoria: 'ONG - Cultura/Educación', nombre: 'IDRA-PERU', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Investigación para el Desarrollo Rural' },
+  // ORG. JUVENIL (9)
+  { categoria: 'Org. Juvenil', nombre: 'Colectivo Juventudes Puno', direccion: '', telefono: '', email: '', facebookWeb: 'colectivojuventudespuno.blogspot.com', descripcion: 'Coordinador: Jeamil Esthiff Terán Toledo' },
+  { categoria: 'Org. Juvenil', nombre: 'Red Interquorum Puno', direccion: 'Jr. Echave N° 295', telefono: '951904650', email: 'raul_29v@hotmail.com', facebookWeb: 'rediqpuno.org', descripcion: '' },
+  { categoria: 'Org. Juvenil', nombre: 'Red Interquorum Juliaca', direccion: 'Av. Santa Rosa', telefono: '950763596', email: 'carlitos_lau@hotmail.com', facebookWeb: '', descripcion: '' },
+  { categoria: 'Org. Juvenil', nombre: 'Red Interquorum Ayaviri', direccion: 'Jr. Tarapaca N° 930', telefono: '951075448', email: 'cupido_eroz28@hotmail.com', facebookWeb: '', descripcion: '' },
+  { categoria: 'Org. Juvenil', nombre: 'Red Interquorum Umachiri', direccion: 'Plaza de Armas, Av. Arequipa N° 116', telefono: '951048163', email: 'greny_2880@hotmail.com', facebookWeb: '', descripcion: '' },
+  { categoria: 'Org. Juvenil', nombre: 'ECOLÓGICAMENTE Q\'UMIR', direccion: 'Jr. German Humpiri, Juliaca', telefono: '993813019', email: 'ecologicamentequmir@gmail.com', facebookWeb: '', descripcion: 'Organización ecológica' },
+  { categoria: 'Org. Juvenil', nombre: 'Parroquia de Caracoto', direccion: '', telefono: '354185 / 9801916', email: 'rv_ca@hotmail.com', facebookWeb: '', descripcion: 'Representante: Rosario Canal' },
+  { categoria: 'Org. Juvenil', nombre: 'Red Universitaria Ambiental - UNA Puno', direccion: 'Av. Floral 1153', telefono: '', email: 'tatancito18@hotmail.com', facebookWeb: '', descripcion: '' },
+  { categoria: 'Org. Juvenil', nombre: 'Consejo Distrital de la Juventud', direccion: 'Jr. María Jiménez N° 251', telefono: '', email: '', facebookWeb: '', descripcion: 'Cesar Cahuari Ticona' },
+  // ORG. SOCIAL DE BASE (4)
+  { categoria: 'Org. Social de Base', nombre: 'Barrio 4 de Noviembre', direccion: 'Jr. José Sabogal N° 241', telefono: '', email: '', facebookWeb: '', descripcion: 'Representante: Ricardo Huamaní Damián' },
+  { categoria: 'Org. Social de Base', nombre: 'Urbanización Chanu Chanu III Etapa', direccion: '', telefono: '01202622', email: '', facebookWeb: '', descripcion: 'Representante: María Luisa Ortega Huanca' },
+  { categoria: 'Org. Social de Base', nombre: 'Barrio Unión Llavini', direccion: 'Jr. Venezuela N° 122', telefono: '', email: '', facebookWeb: '', descripcion: 'Representante: Julio Cuno Mamani' },
+  { categoria: 'Org. Social de Base', nombre: 'Red Interquorum', direccion: 'Jr. Pasco Turístico N° 315', telefono: '', email: '', facebookWeb: '', descripcion: 'Representante: Dino Yasmani Morales Paja' },
+  // ORG. INDÍGENA/CAMPESINA (1)
+  { categoria: 'Org. Indígena/Campesina', nombre: 'Unión Nacional de Comunidades Aymaras (UNCA)', direccion: 'Jr. Arequipa N° 1185, Puno', telefono: '900935669 / 951570922', email: 'uniondecomunidadesunca@hotmail.com', facebookWeb: '', descripcion: '' },
+  // MESA DE CONCERTACIÓN (14)
+  { categoria: 'Mesa de Concertación', nombre: 'Coordinación Regional - Mesa de Concertación', direccion: 'Jr. Cusco 142, Puno', telefono: '051-364939 / 943280578', email: 'puno@mesadeconcertacion.org.pe', facebookWeb: '', descripcion: 'Coordinadora: Hiliana Uribe Mendoza' },
+  { categoria: 'Mesa de Concertación', nombre: 'ADEMUC', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Presidenta: Marcela Gonzales Yanqui' },
+  { categoria: 'Mesa de Concertación', nombre: 'Awqa Warmi', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Presidenta: Yuly Del Pilar Quispe Cusicani' },
+  { categoria: 'Mesa de Concertación', nombre: 'Centro Bartolomé de las Casas', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Coordinador: Sadia Huaman Lujan' },
+  { categoria: 'Mesa de Concertación', nombre: 'Centro Yanapanakusun', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Coordinadora: Bertha Maron Salazar' },
+  { categoria: 'Mesa de Concertación', nombre: 'CONREDES Puno', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Decana: Wilhen Rogger Limachi Viamonte' },
+  { categoria: 'Mesa de Concertación', nombre: 'Coordinadora Rural', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Coordinador: Reynaldo Quispe Chambi' },
+  { categoria: 'Mesa de Concertación', nombre: 'COREJU', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Presidente: Vidal Armando Roque Allca' },
+  { categoria: 'Mesa de Concertación', nombre: 'FORO Salud', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Coordinador: Modesto Cutipa Yunga' },
+  { categoria: 'Mesa de Concertación', nombre: 'Servicios Educativos Rurales', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Coordinador: Ronal Callacondo Mollo' },
+  { categoria: 'Mesa de Concertación', nombre: 'Colegio de Psicólogos', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Decana: Bertha Elizabeth Huallpa Bendezu' },
+  { categoria: 'Mesa de Concertación', nombre: 'Colegio de Sociólogos de Puno', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Decano: Clodoaldo Arturo Sánchez Justo' },
+  { categoria: 'Mesa de Concertación', nombre: 'Comité de Transparencia y Vigilancia Ciudadana', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Presidente: Rosendo David Cuno Quispe' },
+  { categoria: 'Mesa de Concertación', nombre: 'ICEM Maranata', direccion: '', telefono: '', email: '', facebookWeb: '', descripcion: 'Representante: Victoria Zarela Pineda Mazuelos' },
+  // INST. EDUCATIVA (2)
+  { categoria: 'Inst. Educativa', nombre: 'Universidad Nacional del Altiplano', direccion: 'Av. Ejército N° 329, Ciudad Universitaria', telefono: '352206', email: '', facebookWeb: '', descripcion: 'Universidad pública' },
+  { categoria: 'Inst. Educativa', nombre: 'Universidad Andina Néstor Cáceres Velásquez', direccion: 'Ed. El Camping 3º Piso, Pasaje de La Cultura Plaza de Armas, Juliaca', telefono: '322213', email: '', facebookWeb: '', descripcion: 'Universidad privada' },
+];
 
 // Función para calcular estadísticas por provincia
 export function getProvinceStats(): ProvinciaStats[] {

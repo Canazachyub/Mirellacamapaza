@@ -29,6 +29,7 @@ import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, Badge, Button } from '@/components/common';
 import {
   REGIONAL_TOTALS,
+  TOTAL_ELECTORES_2026,
   PROVINCE_LOCATIONS,
   getProvinceStats,
   getDistritosByProvincia,
@@ -448,7 +449,7 @@ const ElectoralMap = () => {
               Mapa Electoral - Region Puno
             </h1>
             <p className="text-secondary-600 mt-1">
-              Analisis territorial de {REGIONAL_TOTALS.electores.toLocaleString()} electores en {REGIONAL_TOTALS.provincias} provincias
+              Poblacion Electoral 2026: <strong>{TOTAL_ELECTORES_2026.toLocaleString()}</strong> electores en {REGIONAL_TOTALS.provincias} provincias (Fuente: RENIEC)
             </p>
           </div>
           <Badge variant="info" className="text-lg px-4 py-2">
@@ -816,7 +817,7 @@ const ElectoralMap = () => {
                 <Badge variant="success">Baja (-5,000)</Badge>
               </div>
             </div>
-            <div className="text-sm text-secondary-500">Fuente: ONPE/JNE - Padron Electoral 2021</div>
+            <div className="text-sm text-secondary-500">Detalle distrital: ONPE/JNE 2021 | Totales provinciales 2026: RENIEC ({TOTAL_ELECTORES_2026.toLocaleString()} electores)</div>
           </div>
         </Card>
       </div>

@@ -30,6 +30,7 @@ const DashboardGallery = lazy(() => import('@/pages/dashboard/Gallery'));
 const DashboardSocialMedia = lazy(() => import('@/pages/dashboard/SocialMedia'));
 const DashboardSentiments = lazy(() => import('@/pages/dashboard/Sentiments'));
 const DashboardElectoralMap = lazy(() => import('@/pages/dashboard/ElectoralMap'));
+const DashboardStrategy = lazy(() => import('@/pages/dashboard/Strategy'));
 
 // Loading component
 const PageLoader = () => (
@@ -168,6 +169,14 @@ function App() {
           element={
             <ProtectedRoute>
               <DashboardElectoralMap />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/estrategia"
+          element={
+            <ProtectedRoute>
+              <DashboardStrategy />
             </ProtectedRoute>
           }
         />
