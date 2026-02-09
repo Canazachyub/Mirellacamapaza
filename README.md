@@ -31,7 +31,7 @@ mirella-camapaza-web/
 │   │   └── sections/      # Secciones de página (Hero, Proposals, Documents, etc.)
 │   ├── pages/
 │   │   ├── auth/          # Páginas de autenticación (Login)
-│   │   ├── dashboard/     # Panel administrativo
+│   │   ├── dashboard/     # Panel administrativo (14 módulos)
 │   │   └── public/        # Páginas públicas
 │   ├── services/
 │   │   └── api.ts         # Cliente API para Google Apps Script
@@ -41,8 +41,11 @@ mirella-camapaza-web/
 │   ├── types/
 │   │   └── index.ts       # Tipos TypeScript
 │   └── utils/
-│       ├── constants.ts   # Constantes y configuración
-│       └── helpers.ts     # Funciones auxiliares
+│       ├── constants.ts     # Constantes y configuración
+│       ├── helpers.ts       # Funciones auxiliares
+│       ├── electoralData.ts # Datos electorales 2021/2026 (110 distritos, 13 provincias)
+│       └── efemerides.ts    # Efemérides de la Región Puno (130+ eventos)
+├── GOOGLE_APPS_SCRIPT_UPDATE.js  # Código del backend Google Apps Script
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml     # GitHub Actions para despliegue automático
@@ -160,17 +163,50 @@ mirella-camapaza-web/
 - Asignar líder
 - Ver miembros del equipo
 
-#### 8. Eventos (`/admin/eventos`)
+#### 8. Mapa Electoral (`/admin/mapa-electoral`)
+- **Mapa interactivo** de las 13 provincias de Puno con Leaflet
+- Datos electorales 2021/2026 por provincia y distrito (110 distritos)
+- Estadísticas: electores, varones, mujeres, jóvenes, mayores de 70
+- Metas territoriales y seguimiento de apoyo
+- Fuente: ONPE/JNE 2021, RENIEC 2026
+
+#### 9. Estrategia (`/admin/estrategia`)
+- Datos electorales consolidados 2021 y proyección 2026
+- Congresistas elegidos 2021 por Puno (datos oficiales ONPE/JNE)
+- Análisis de medios de comunicación regionales
+- Organizaciones sociales y actores clave
+- Planificación estratégica de campaña
+
+#### 10. Eventos (`/admin/eventos`)
 - **Calendario de Google integrado** (dra.mirella.camapaza.4@gmail.com)
+- **Efemérides de la Región Puno:** 130+ eventos cronológicos
+  - 13 provincias con fechas de creación política
+  - 100+ distritos con aniversarios y base legal
+  - 5 mercados y plazas feriales
+  - 4 festividades principales (Candelaria, Carnavales de Juliaca, San Miguel Arcángel, Inmaculada Concepción)
+  - Filtros por categoría (provincia, distrito, mercado, festividad)
+  - Búsqueda por nombre y agrupación por mes
+  - Indicador de próximo aniversario
 - Crear eventos manualmente
 - Estados: Programado, En Curso, Finalizado, Cancelado
 
-#### 9. Reportes (`/admin/reportes`)
+#### 11. Redes Sociales (`/admin/redes-sociales`)
+- Gestión de presencia en redes sociales
+- Publicaciones y alcance
+
+#### 12. Sentimientos (`/admin/sentimientos`)
+- **Análisis de sentimiento** con Gemini AI
+- Clasificación: positivo, negativo, neutro
+- Categorías y etiquetas automáticas
+- Nivel de riesgo por comentario
+- Generación de respuestas con IA
+
+#### 13. Reportes (`/admin/reportes`)
 - Estadísticas detalladas
 - Gráficos de crecimiento
 - Exportación de reportes
 
-#### 10. Configuración (`/admin/configuracion`)
+#### 14. Configuración (`/admin/configuracion`)
 - Configuración general del sitio
 - Cambio de contraseña
 - Ajustes de notificaciones
@@ -223,12 +259,34 @@ Base URL: https://script.google.com/macros/s/[ID]/exec
 - `POST ?action=deleteFile` - Eliminar archivo
 - `POST ?action=createFolder` - Crear carpeta
 
+#### Tareas Diarias
+- `GET ?action=getTasks` - Listar tareas
+- `POST ?action=addTask` - Crear tarea
+- `POST ?action=updateTask` - Actualizar tarea
+- `POST ?action=toggleTaskComplete` - Marcar como completada
+- `POST ?action=deleteTask` - Eliminar tarea
+
+#### Bases Territoriales
+- `GET ?action=getBases` - Listar bases territoriales
+- `GET ?action=getBaseStats` - Estadísticas de bases
+- `POST ?action=addBase` - Crear base
+- `POST ?action=updateBase` - Actualizar base
+- `POST ?action=deleteBase` - Eliminar base
+
+#### Sentimientos
+- `GET ?action=getSentiments` - Listar análisis de sentimiento
+- `GET ?action=getSentimentStats` - Estadísticas de sentimiento
+
+#### Gemini AI
+- `POST ?action=generateAIResponse` - Generar respuesta con IA
+
 #### Estadísticas
-- `GET ?action=getStats` - Obtener estadísticas
+- `GET ?action=getStats` - Obtener estadísticas generales
 
 #### Configuración
 - `GET ?action=getConfig` - Obtener configuración
 - `POST ?action=updateConfig` - Actualizar configuración
+- `GET ?action=validateLogin` - Validar contraseña de acceso
 
 ## Información de Contacto
 
