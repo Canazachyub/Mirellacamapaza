@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import {
@@ -14,6 +14,13 @@ import {
   XCircle,
   PlayCircle,
   ExternalLink,
+  Landmark,
+  Building2,
+  Store,
+  ChevronDown,
+  ChevronRight,
+  Star,
+  Music,
 } from 'lucide-react';
 
 // URL del calendario de Google de la candidata
@@ -26,6 +33,16 @@ import { getEvents, addEvent, updateEvent, deleteEvent } from '@/services/api';
 import { useToast } from '@/store/uiStore';
 import { getStatusColor } from '@/utils/helpers';
 import type { Event } from '@/types';
+import {
+  EFEMERIDES,
+  getNombreMes,
+  getCategoriaBadge,
+  getProximaEfemeride,
+  contarPorCategoria,
+  type Efemeride,
+} from '@/utils/efemerides';
+
+type CategoriaFiltro = 'todas' | 'provincia' | 'distrito' | 'mercado' | 'festividad';
 
 const Events = () => {
   const [search, setSearch] = useState('');
@@ -39,6 +56,16 @@ const Events = () => {
     hora: '',
     lugar: '',
     responsable: '',
+  });
+
+  // Efemérides state
+  const [efemeridesOpen, setEfemeridesOpen] = useState(true);
+  const [categoriaFiltro, setCategoriaFiltro] = useState<CategoriaFiltro>('todas');
+  const [searchEfemerides, setSearchEfemerides] = useState('');
+  const [mesesExpandidos, setMesesExpandidos] = useState<Set<number>>(() => {
+    // Expandir el mes actual por defecto
+    const mesActual = new Date().getMonth() + 1;
+    return new Set([mesActual]);
   });
 
   const queryClient = useQueryClient();
@@ -186,6 +213,75 @@ const Events = () => {
   const upcomingEvents = filteredEvents.filter(e => isUpcoming(e.Fecha) && e.Estado !== 'Cancelado');
   const pastEvents = filteredEvents.filter(e => !isUpcoming(e.Fecha) || e.Estado === 'Cancelado');
 
+  // Efemérides computed
+  const stats = useMemo(() => contarPorCategoria(), []);
+  const proximaEfemeride = useMemo(() => getProximaEfemeride(), []);
+
+  const efemeridesFiltradas = useMemo(() => {
+    let resultado = EFEMERIDES;
+
+    if (categoriaFiltro !== 'todas') {
+      resultado = resultado.filter(ef => ef.categoria === categoriaFiltro);
+    }
+
+    if (searchEfemerides.trim()) {
+      const q = searchEfemerides.toLowerCase();
+      resultado = resultado.filter(
+        ef =>
+          ef.titulo.toLowerCase().includes(q) ||
+          ef.provincia.toLowerCase().includes(q) ||
+          ef.descripcion.toLowerCase().includes(q)
+      );
+    }
+
+    return resultado;
+  }, [categoriaFiltro, searchEfemerides]);
+
+  const efemeridesPorMes = useMemo(() => {
+    const porMes = new Map<number, Efemeride[]>();
+    for (const ef of efemeridesFiltradas) {
+      const lista = porMes.get(ef.mes) || [];
+      lista.push(ef);
+      porMes.set(ef.mes, lista);
+    }
+    return porMes;
+  }, [efemeridesFiltradas]);
+
+  const toggleMes = (mes: number) => {
+    setMesesExpandidos(prev => {
+      const next = new Set(prev);
+      if (next.has(mes)) {
+        next.delete(mes);
+      } else {
+        next.add(mes);
+      }
+      return next;
+    });
+  };
+
+  const expandirTodos = () => {
+    const todos = new Set<number>();
+    efemeridesPorMes.forEach((_, mes) => todos.add(mes));
+    setMesesExpandidos(todos);
+  };
+
+  const colapsarTodos = () => {
+    setMesesExpandidos(new Set());
+  };
+
+  const getCategoriaIcon = (cat: Efemeride['categoria']) => {
+    switch (cat) {
+      case 'provincia':
+        return <Landmark className="w-4 h-4" />;
+      case 'distrito':
+        return <Building2 className="w-4 h-4" />;
+      case 'mercado':
+        return <Store className="w-4 h-4" />;
+      case 'festividad':
+        return <Music className="w-4 h-4" />;
+    }
+  };
+
   return (
     <DashboardLayout title="Eventos">
       {/* Header */}
@@ -264,6 +360,204 @@ const Events = () => {
             title="Agenda de la Dra. Mirella Camapaza"
           />
         </div>
+      </Card>
+
+      {/* ═══════════════════════════════════════════════════════ */}
+      {/* Efemérides de la Región Puno */}
+      {/* ═══════════════════════════════════════════════════════ */}
+      <Card className="mb-6">
+        {/* Header colapsable */}
+        <button
+          onClick={() => setEfemeridesOpen(!efemeridesOpen)}
+          className="w-full flex items-center justify-between"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-amber-100 rounded-lg flex items-center justify-center">
+              <Star className="w-5 h-5 text-purple-600" />
+            </div>
+            <div className="text-left">
+              <h3 className="font-semibold text-secondary-900">
+                Efemérides de la Región Puno
+              </h3>
+              <p className="text-sm text-secondary-500">
+                {stats.total} efemérides: {stats.provincias} provincias, {stats.distritos} distritos, {stats.mercados} mercados, {stats.festividades} festividades
+              </p>
+            </div>
+          </div>
+          <ChevronDown
+            className={`w-5 h-5 text-secondary-400 transition-transform ${efemeridesOpen ? 'rotate-180' : ''}`}
+          />
+        </button>
+
+        {efemeridesOpen && (
+          <div className="mt-4">
+            {/* Próxima efeméride destacada */}
+            {proximaEfemeride && (
+              <div className="mb-4 p-3 bg-gradient-to-r from-purple-50 to-amber-50 border border-purple-200 rounded-lg">
+                <div className="flex items-center gap-2 mb-1">
+                  <Star className="w-4 h-4 text-amber-500" />
+                  <span className="text-xs font-semibold text-purple-700 uppercase">Próximo aniversario</span>
+                </div>
+                <p className="font-semibold text-secondary-900">{proximaEfemeride.titulo}</p>
+                <p className="text-sm text-secondary-600">
+                  {proximaEfemeride.dia} de {getNombreMes(proximaEfemeride.mes)}
+                  {proximaEfemeride.anio ? ` (desde ${proximaEfemeride.anio})` : ''} — Prov. {proximaEfemeride.provincia}
+                </p>
+              </div>
+            )}
+
+            {/* Filtros */}
+            <div className="flex flex-col sm:flex-row gap-3 mb-4">
+              <div className="flex gap-2 flex-wrap">
+                {([
+                  { key: 'todas' as CategoriaFiltro, label: 'Todas', count: stats.total },
+                  { key: 'provincia' as CategoriaFiltro, label: 'Provincias', count: stats.provincias },
+                  { key: 'distrito' as CategoriaFiltro, label: 'Distritos', count: stats.distritos },
+                  { key: 'mercado' as CategoriaFiltro, label: 'Mercados', count: stats.mercados },
+                  { key: 'festividad' as CategoriaFiltro, label: 'Festividades', count: stats.festividades },
+                ]).map(({ key, label, count }) => (
+                  <button
+                    key={key}
+                    onClick={() => setCategoriaFiltro(key)}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${
+                      categoriaFiltro === key
+                        ? 'bg-primary-600 text-white'
+                        : 'bg-secondary-100 text-secondary-600 hover:bg-secondary-200'
+                    }`}
+                  >
+                    {label} ({count})
+                  </button>
+                ))}
+              </div>
+              <div className="flex-1">
+                <Input
+                  placeholder="Buscar distrito, provincia..."
+                  value={searchEfemerides}
+                  onChange={(e) => setSearchEfemerides(e.target.value)}
+                  leftIcon={<Search className="w-4 h-4" />}
+                  className="text-sm"
+                />
+              </div>
+            </div>
+
+            {/* Botones expandir/colapsar */}
+            <div className="flex gap-2 mb-3">
+              <button
+                onClick={expandirTodos}
+                className="text-xs text-primary-600 hover:underline"
+              >
+                Expandir todos
+              </button>
+              <span className="text-secondary-300">|</span>
+              <button
+                onClick={colapsarTodos}
+                className="text-xs text-primary-600 hover:underline"
+              >
+                Colapsar todos
+              </button>
+            </div>
+
+            {/* Lista por meses */}
+            <div className="space-y-2">
+              {Array.from(efemeridesPorMes.entries())
+                .sort(([a], [b]) => a - b)
+                .map(([mes, efemerides]) => {
+                  const expandido = mesesExpandidos.has(mes);
+                  return (
+                    <div key={mes} className="border border-secondary-200 rounded-lg overflow-hidden">
+                      {/* Header del mes */}
+                      <button
+                        onClick={() => toggleMes(mes)}
+                        className="w-full flex items-center justify-between px-4 py-3 bg-secondary-50 hover:bg-secondary-100 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          {expandido ? (
+                            <ChevronDown className="w-4 h-4 text-secondary-500" />
+                          ) : (
+                            <ChevronRight className="w-4 h-4 text-secondary-500" />
+                          )}
+                          <span className="font-semibold text-secondary-800">
+                            {getNombreMes(mes)}
+                          </span>
+                          <span className="text-xs bg-secondary-200 text-secondary-600 px-2 py-0.5 rounded-full">
+                            {efemerides.length} {efemerides.length === 1 ? 'evento' : 'eventos'}
+                          </span>
+                        </div>
+                      </button>
+
+                      {/* Contenido del mes */}
+                      {expandido && (
+                        <div className="divide-y divide-secondary-100">
+                          {efemerides.map((ef, idx) => {
+                            const badge = getCategoriaBadge(ef.categoria);
+                            return (
+                              <motion.div
+                                key={`${ef.mes}-${ef.dia}-${idx}`}
+                                initial={{ opacity: 0, y: -5 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: idx * 0.02 }}
+                                className="flex items-start gap-3 px-4 py-3 hover:bg-secondary-50 transition-colors"
+                              >
+                                {/* Fecha */}
+                                <div className="flex-shrink-0 w-12 h-12 bg-primary-50 border border-primary-200 rounded-lg flex flex-col items-center justify-center">
+                                  <span className="text-lg font-bold text-primary-700 leading-none">
+                                    {ef.dia}
+                                  </span>
+                                  <span className="text-[10px] text-primary-500 uppercase leading-none mt-0.5">
+                                    {getNombreMes(ef.mes).slice(0, 3)}
+                                  </span>
+                                </div>
+
+                                {/* Info */}
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-start gap-2 flex-wrap">
+                                    <h4 className="text-sm font-semibold text-secondary-900">
+                                      {ef.titulo}
+                                    </h4>
+                                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium rounded-full ${badge.color}`}>
+                                      {getCategoriaIcon(ef.categoria)}
+                                      {badge.label}
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-secondary-600 mt-0.5 line-clamp-2">
+                                    {ef.descripcion}
+                                  </p>
+                                  <div className="flex items-center gap-3 mt-1 text-xs text-secondary-500">
+                                    <span className="flex items-center gap-1">
+                                      <MapPin className="w-3 h-3" />
+                                      Prov. {ef.provincia}
+                                    </span>
+                                    {ef.anio && (
+                                      <span className="flex items-center gap-1">
+                                        <Calendar className="w-3 h-3" />
+                                        Desde {ef.anio}
+                                      </span>
+                                    )}
+                                    {ef.baseLegal && (
+                                      <span className="hidden sm:inline text-secondary-400">
+                                        {ef.baseLegal}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              </motion.div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+            </div>
+
+            {efemeridesFiltradas.length === 0 && (
+              <div className="text-center py-8 text-secondary-500">
+                <Search className="w-8 h-8 mx-auto mb-2 text-secondary-300" />
+                <p>No se encontraron efemérides con esos filtros.</p>
+              </div>
+            )}
+          </div>
+        )}
       </Card>
 
       {/* Events */}

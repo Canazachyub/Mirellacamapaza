@@ -24,6 +24,7 @@ const SHEETS = {
   CONFIG: 'Configuracion',
   TASKS: 'Tareas',
   SENTIMENTS: 'Sentimientos',  // Análisis de sentimientos
+  BASES_TERRITORIALES: 'Bases_Territoriales',  // Tracking de bases y responsables por zona
 };
 
 // ============================================
@@ -103,6 +104,13 @@ function doGet(e) {
         break;
       case 'getSentimentStats':
         result = getSentimentStats();
+        break;
+      // ====== BASES TERRITORIALES ======
+      case 'getBases':
+        result = getBases(e.parameter);
+        break;
+      case 'getBaseStats':
+        result = getBaseStats();
         break;
       // ==============================
       default:
@@ -210,6 +218,16 @@ function doPost(e) {
       // ====== GEMINI AI ======
       case 'generateAIResponse':
         result = generateAIResponse(data);
+        break;
+      // ====== BASES TERRITORIALES ======
+      case 'addBase':
+        result = addBase(data);
+        break;
+      case 'updateBase':
+        result = updateBase(data);
+        break;
+      case 'deleteBase':
+        result = deleteBase(data);
         break;
       // ==============================
       default:
@@ -1284,22 +1302,23 @@ function getStats() {
 
   if (totalAffiliates > 0) {
     const affiliatesData = affiliatesSheet.getDataRange().getValues();
-    affiliatesData.slice(1).forEach((row) => {
-      // ÍNDICES ACTUALIZADOS (18 columnas):
-      // 0-ID | 1-Fecha | 2-Nombre | 3-Apellidos | 4-DNI | 5-Telefono | 6-Email | 7-Direccion |
-      // 8-NumeroDireccion | 9-Urbanizacion | 10-Distrito | 11-Provincia | 12-Region |
-      // 13-FechaNacimiento | 14-LugarNacimiento | 15-EstadoCivil | 16-Sexo | 17-Estado
+    const headers = affiliatesData[0];
+    // Buscar índices por nombre de columna (robusto ante cambios de esquema)
+    const distritoIdx = headers.indexOf('Distrito');
+    const provinciaIdx = headers.indexOf('Provincia');
+    const estadoIdx = headers.indexOf('Estado');
 
-      // Por distrito (índice 10)
-      const distrito = row[10] || 'Sin especificar';
+    affiliatesData.slice(1).forEach((row) => {
+      // Por distrito (buscar por header)
+      const distrito = String(distritoIdx >= 0 ? row[distritoIdx] : '').trim() || 'Sin especificar';
       affiliatesByDistrict[distrito] = (affiliatesByDistrict[distrito] || 0) + 1;
 
-      // Por provincia (índice 11)
-      const provincia = row[11] || 'Sin especificar';
+      // Por provincia (buscar por header)
+      const provincia = String(provinciaIdx >= 0 ? row[provinciaIdx] : '').trim() || 'Sin especificar';
       affiliatesByProvince[provincia] = (affiliatesByProvince[provincia] || 0) + 1;
 
-      // Por estado (índice 17)
-      const estado = row[17] || 'Pendiente';
+      // Por estado (buscar por header)
+      const estado = String(estadoIdx >= 0 ? row[estadoIdx] : '').trim() || 'Pendiente';
       affiliatesByStatus[estado] = (affiliatesByStatus[estado] || 0) + 1;
     });
   }
@@ -1964,18 +1983,18 @@ Siempre comenzar con Hermano, Hermana o similar segun el contexto del nombre del
 
 TIPO A - APOYO/FELICITACION:
 - Agradecer con el corazon, mencionar la union
-- Obligatorio poner link e invitacion al grupo
-- Ejemplos: "Hermana, gracias de corazon! Juntos haremos historia"
+- OBLIGATORIO poner link del GRUPO DE WHATSAPP
+- Ejemplos: "Hermana, gracias de corazon! Juntos haremos historia. Unete al grupo!"
 
 TIPO B - CRITICA/DESCONFIANZA/ATAQUE:
 - Responder con DIGNIDAD y DATOS concretos
 - Defender mi trayectoria con argumentos
-- Invitar a revisar la web para conocer mas
+- Invitar al GRUPO DE WHATSAPP para conocer mas
 - Ejemplos: "Hermano, entiendo esa desconfianza, pero soy profesional con años de servicio..."
 
 TIPO C - PREGUNTA SOBRE PROPUESTAS/TRAYECTORIA:
 - Responder informativamente con mis datos reales
-- Link a web para conocer mas
+- Invitar al GRUPO para mas informacion
 - Ejemplo: "Hermana, soy abogada y contadora puneña, trabaje como asesora tecnica..."
 
 TIPO D - PREGUNTA SOBRE PARTIDO/SIMBOLO:
@@ -1984,23 +2003,23 @@ TIPO D - PREGUNTA SOBRE PARTIDO/SIMBOLO:
 
 TIPO E - INSULTO O COMENTARIO NEGATIVO:
 - Responder con educacion y dignidad
-- Invitar al dialogo
-- Ejemplo: "Hermano, respeto tu opinion. Te invito a conocer mi trayectoria en mi web"
+- Invitar al dialogo en el GRUPO
+- Ejemplo: "Hermano, respeto tu opinion. Te invito a conocerme en nuestro grupo"
 
 TIPO F - PERSONA INDECISA/DUDA GENUINA:
 - Invitar a conocerme con calidez
-- Incluir link al grupo de WhatsApp
+- SIEMPRE incluir link al GRUPO DE WHATSAPP
 - Ejemplo: "Hermana, te invito a conocer mis propuestas en nuestro grupo"
 
 TIPO G - EMOJI/COMENTARIO NEUTRAL:
 - Agradecer brevemente con calidez
-- Invitar al grupo
+- Invitar al GRUPO
 - Ejemplo: "Hermano, gracias por estar aqui! Unete a nuestro grupo"
 
-=== LINKS ===
-- Grupo WhatsApp: https://chat.whatsapp.com/IUEaHeI5BcQKk9esAC4xE3
-- WhatsApp directo: https://wa.link/b77kam
-- Web: https://mirellacamapaza.com/
+=== LINK UNICO - SOLO USAR ESTE ===
+Grupo WhatsApp: https://chat.whatsapp.com/IUEaHeI5BcQKk9esAC4xE3
+
+IMPORTANTE: SOLO usar el link del grupo de WhatsApp. NO usar links de pagina web ni otros enlaces.
 
 === REGLAS DE ESTILO ===
 1. SIEMPRE comenzar con Hermano/Hermana segun corresponda
@@ -2010,20 +2029,20 @@ TIPO G - EMOJI/COMENTARIO NEUTRAL:
 5. Maximo 3-4 oraciones
 6. Puedo usar 1-2 emojis si es apropiado
 7. Terminar con variaciones de: "Escribe el 4", "escribe el 4", "escribe 4", "El cambio es el 4"
-8. Incluir link en la mayoria de respuestas positivas para invitar
+8. SIEMPRE incluir el link del grupo de WhatsApp en respuestas positivas
 
 === EJEMPLOS REALES ===
 
 Critica: "Otra politica que no hara nada"
-Respuesta: "Hermano, entiendo esa desconfianza con los politicos, pero yo no soy improvisada. Soy abogada y contadora puneña con años de experiencia. Mi trayectoria esta limpia. Conoceme en https://mirellacamapaza.com/ Escribe el 4!"
+Respuesta: "Hermano, entiendo esa desconfianza con los politicos, pero yo no soy improvisada. Soy abogada y contadora puneña con años de experiencia. Mi trayectoria esta limpia. Unete al grupo para conocerme: https://chat.whatsapp.com/IUEaHeI5BcQKk9esAC4xE3 Escribe el 4!"
 
 Apoyo: "Exitos Mirella!"
-Respuesta: "Hermana, gracias de corazon! Con el apoyo de todos lograremos el cambio. Unete https://chat.whatsapp.com/IUEaHeI5BcQKk9esAC4xE3 Escribe el 4!"
+Respuesta: "Hermana, gracias de corazon! Con el apoyo de todos lograremos el cambio. Unete al grupo: https://chat.whatsapp.com/IUEaHeI5BcQKk9esAC4xE3 Escribe el 4!"
 
 Insulto: "Eres una rata"
-Respuesta: "Hermano, respeto tu opinion aunque no la comparta. Te invito a conocer mi trayectoria limpia en https://mirellacamapaza.com/ El dialogo nos une. Escribe el 4!"
+Respuesta: "Hermano, respeto tu opinion aunque no la comparta. Te invito a conocer mi trayectoria en nuestro grupo: https://chat.whatsapp.com/IUEaHeI5BcQKk9esAC4xE3 El dialogo nos une. Escribe el 4!"
 
-RESPONDE SOLO EL MENSAJE FINAL.
+RESPONDE SOLO EL MENSAJE FINAL. SOLO USAR EL LINK DEL GRUPO DE WHATSAPP.
 
 Comentario a responder: "${comentario}"
 
@@ -2041,6 +2060,275 @@ function testGeminiAPI() {
     Logger.log('Error: ' + error.message);
     return { success: false, error: error.message };
   }
+}
+
+// ============================================
+// BASES TERRITORIALES - Tracking de bases por provincia/distrito
+// Hoja única simplificada para mapear responsables y competencia
+// ============================================
+
+/**
+ * Estructura de la hoja BASES_TERRITORIALES:
+ * ID | Fecha | Provincia | Distrito | TipoBase | Responsable | Telefono |
+ * Estado | Afiliados | Voluntarios | Competencia | NotasCompetencia | Prioridad | Notas
+ *
+ * TipoBase: Sede | Punto_Contacto | Comunidad
+ * Estado: Activa | En_Formacion | Pendiente | Inactiva
+ * Prioridad: Alta | Media | Baja
+ */
+
+function getBases(params) {
+  const sheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID).getSheetByName(SHEETS.BASES_TERRITORIALES);
+
+  if (!sheet) {
+    // Crear la hoja si no existe
+    createBasesSheet();
+    return { success: true, data: [], total: 0 };
+  }
+
+  const data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return { success: true, data: [], total: 0 };
+
+  const headers = data[0];
+  let bases = data.slice(1).map((row) => rowToObject(headers, row));
+
+  // Filtros
+  if (params.provincia) {
+    bases = bases.filter((b) => b.Provincia === params.provincia);
+  }
+  if (params.distrito) {
+    bases = bases.filter((b) => b.Distrito === params.distrito);
+  }
+  if (params.estado) {
+    bases = bases.filter((b) => b.Estado === params.estado);
+  }
+  if (params.prioridad) {
+    bases = bases.filter((b) => b.Prioridad === params.prioridad);
+  }
+
+  // Ordenar por provincia, luego por distrito
+  bases.sort((a, b) => {
+    if (a.Provincia !== b.Provincia) return a.Provincia.localeCompare(b.Provincia);
+    return a.Distrito.localeCompare(b.Distrito);
+  });
+
+  return {
+    success: true,
+    data: bases,
+    total: bases.length
+  };
+}
+
+function getBaseStats() {
+  const sheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID).getSheetByName(SHEETS.BASES_TERRITORIALES);
+
+  if (!sheet) {
+    return {
+      success: true,
+      data: {
+        totalBases: 0,
+        activas: 0,
+        enFormacion: 0,
+        pendientes: 0,
+        totalAfiliados: 0,
+        totalVoluntarios: 0,
+        porProvincia: {},
+        porPrioridad: { Alta: 0, Media: 0, Baja: 0 }
+      }
+    };
+  }
+
+  const data = sheet.getDataRange().getValues();
+  if (data.length <= 1) {
+    return {
+      success: true,
+      data: {
+        totalBases: 0,
+        activas: 0,
+        enFormacion: 0,
+        pendientes: 0,
+        totalAfiliados: 0,
+        totalVoluntarios: 0,
+        porProvincia: {},
+        porPrioridad: { Alta: 0, Media: 0, Baja: 0 }
+      }
+    };
+  }
+
+  const headers = data[0];
+  const bases = data.slice(1).map((row) => rowToObject(headers, row));
+
+  const stats = {
+    totalBases: bases.length,
+    activas: bases.filter(b => b.Estado === 'Activa').length,
+    enFormacion: bases.filter(b => b.Estado === 'En_Formacion').length,
+    pendientes: bases.filter(b => b.Estado === 'Pendiente').length,
+    totalAfiliados: bases.reduce((sum, b) => sum + (parseInt(b.Afiliados) || 0), 0),
+    totalVoluntarios: bases.reduce((sum, b) => sum + (parseInt(b.Voluntarios) || 0), 0),
+    porProvincia: {},
+    porPrioridad: { Alta: 0, Media: 0, Baja: 0 }
+  };
+
+  // Contar por provincia
+  bases.forEach(b => {
+    if (!stats.porProvincia[b.Provincia]) {
+      stats.porProvincia[b.Provincia] = { bases: 0, afiliados: 0, voluntarios: 0 };
+    }
+    stats.porProvincia[b.Provincia].bases++;
+    stats.porProvincia[b.Provincia].afiliados += parseInt(b.Afiliados) || 0;
+    stats.porProvincia[b.Provincia].voluntarios += parseInt(b.Voluntarios) || 0;
+
+    // Contar por prioridad
+    if (b.Prioridad && stats.porPrioridad[b.Prioridad] !== undefined) {
+      stats.porPrioridad[b.Prioridad]++;
+    }
+  });
+
+  return { success: true, data: stats };
+}
+
+function addBase(data) {
+  const sheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID).getSheetByName(SHEETS.BASES_TERRITORIALES);
+
+  if (!sheet) {
+    createBasesSheet();
+  }
+
+  const targetSheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID).getSheetByName(SHEETS.BASES_TERRITORIALES);
+  const id = 'BASE-' + Date.now();
+  const fecha = new Date().toISOString().split('T')[0];
+
+  const row = [
+    id,
+    fecha,
+    data.provincia || '',
+    data.distrito || '',
+    data.tipoBase || 'Punto_Contacto',
+    data.responsable || '',
+    data.telefono || '',
+    data.estado || 'Pendiente',
+    data.afiliados || 0,
+    data.voluntarios || 0,
+    data.competencia || '',
+    data.notasCompetencia || '',
+    data.prioridad || 'Media',
+    data.notas || ''
+  ];
+
+  targetSheet.appendRow(row);
+
+  return {
+    success: true,
+    message: 'Base territorial registrada',
+    id: id
+  };
+}
+
+function updateBase(data) {
+  const sheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID).getSheetByName(SHEETS.BASES_TERRITORIALES);
+  if (!sheet) return { success: false, error: 'Hoja no encontrada' };
+
+  const allData = sheet.getDataRange().getValues();
+  const headers = allData[0];
+  const idIndex = headers.indexOf('ID');
+
+  for (let i = 1; i < allData.length; i++) {
+    if (allData[i][idIndex] === data.id) {
+      // Actualizar campos específicos
+      const colMap = {};
+      headers.forEach((h, idx) => colMap[h] = idx);
+
+      if (data.responsable !== undefined) sheet.getRange(i + 1, colMap['Responsable'] + 1).setValue(data.responsable);
+      if (data.telefono !== undefined) sheet.getRange(i + 1, colMap['Telefono'] + 1).setValue(data.telefono);
+      if (data.estado !== undefined) sheet.getRange(i + 1, colMap['Estado'] + 1).setValue(data.estado);
+      if (data.afiliados !== undefined) sheet.getRange(i + 1, colMap['Afiliados'] + 1).setValue(data.afiliados);
+      if (data.voluntarios !== undefined) sheet.getRange(i + 1, colMap['Voluntarios'] + 1).setValue(data.voluntarios);
+      if (data.competencia !== undefined) sheet.getRange(i + 1, colMap['Competencia'] + 1).setValue(data.competencia);
+      if (data.notasCompetencia !== undefined) sheet.getRange(i + 1, colMap['NotasCompetencia'] + 1).setValue(data.notasCompetencia);
+      if (data.prioridad !== undefined) sheet.getRange(i + 1, colMap['Prioridad'] + 1).setValue(data.prioridad);
+      if (data.notas !== undefined) sheet.getRange(i + 1, colMap['Notas'] + 1).setValue(data.notas);
+
+      return { success: true, message: 'Base actualizada' };
+    }
+  }
+
+  return { success: false, error: 'Base no encontrada' };
+}
+
+function deleteBase(data) {
+  const sheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID).getSheetByName(SHEETS.BASES_TERRITORIALES);
+  if (!sheet) return { success: false, error: 'Hoja no encontrada' };
+
+  const allData = sheet.getDataRange().getValues();
+  const headers = allData[0];
+  const idIndex = headers.indexOf('ID');
+
+  for (let i = 1; i < allData.length; i++) {
+    if (allData[i][idIndex] === data.id) {
+      sheet.deleteRow(i + 1);
+      return { success: true, message: 'Base eliminada' };
+    }
+  }
+
+  return { success: false, error: 'Base no encontrada' };
+}
+
+function createBasesSheet() {
+  const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+  let sheet = ss.getSheetByName(SHEETS.BASES_TERRITORIALES);
+
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEETS.BASES_TERRITORIALES);
+
+    // Headers
+    const headers = [
+      'ID', 'Fecha', 'Provincia', 'Distrito', 'TipoBase', 'Responsable', 'Telefono',
+      'Estado', 'Afiliados', 'Voluntarios', 'Competencia', 'NotasCompetencia', 'Prioridad', 'Notas'
+    ];
+
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
+    sheet.getRange(1, 1, 1, headers.length).setBackground('#4285f4');
+    sheet.getRange(1, 1, 1, headers.length).setFontColor('#ffffff');
+
+    // Validación de datos para TipoBase
+    const tipoBaseRule = SpreadsheetApp.newDataValidation()
+      .requireValueInList(['Sede', 'Punto_Contacto', 'Comunidad'], true)
+      .build();
+    sheet.getRange('E2:E1000').setDataValidation(tipoBaseRule);
+
+    // Validación de datos para Estado
+    const estadoRule = SpreadsheetApp.newDataValidation()
+      .requireValueInList(['Activa', 'En_Formacion', 'Pendiente', 'Inactiva'], true)
+      .build();
+    sheet.getRange('H2:H1000').setDataValidation(estadoRule);
+
+    // Validación de datos para Prioridad
+    const prioridadRule = SpreadsheetApp.newDataValidation()
+      .requireValueInList(['Alta', 'Media', 'Baja'], true)
+      .build();
+    sheet.getRange('M2:M1000').setDataValidation(prioridadRule);
+
+    // Ajustar anchos de columna
+    sheet.setColumnWidth(1, 120);  // ID
+    sheet.setColumnWidth(2, 100);  // Fecha
+    sheet.setColumnWidth(3, 150);  // Provincia
+    sheet.setColumnWidth(4, 150);  // Distrito
+    sheet.setColumnWidth(5, 120);  // TipoBase
+    sheet.setColumnWidth(6, 180);  // Responsable
+    sheet.setColumnWidth(7, 120);  // Telefono
+    sheet.setColumnWidth(8, 100);  // Estado
+    sheet.setColumnWidth(9, 80);   // Afiliados
+    sheet.setColumnWidth(10, 90);  // Voluntarios
+    sheet.setColumnWidth(11, 200); // Competencia
+    sheet.setColumnWidth(12, 200); // NotasCompetencia
+    sheet.setColumnWidth(13, 80);  // Prioridad
+    sheet.setColumnWidth(14, 250); // Notas
+
+    Logger.log('Hoja Bases_Territoriales creada exitosamente');
+  }
+
+  return sheet;
 }
 
 // ============================================
