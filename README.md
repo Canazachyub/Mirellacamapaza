@@ -174,8 +174,13 @@ mirella-camapaza-web/
 - Datos electorales consolidados 2021 y proyección 2026
 - Congresistas elegidos 2021 por Puno (datos oficiales ONPE/JNE)
 - Análisis de medios de comunicación regionales
-- Organizaciones sociales y actores clave
+- **70 organizaciones sociales y contactos** en 11 categorías:
+  - Protección Animal (3), ONG Ambiente/Desarrollo (8), Gremio/Sindicato (3)
+  - Org. Mujeres (2), Org. Juvenil (4), Org. Social de Base (4)
+  - Org. Indígena/Campesina (1), Mesa de Concertación (14), Inst. Educativa (2)
+  - Servicios Locales (1), **Dirigentes Acora (16)**, **Dirigentes Salcedo (8)**
 - Planificación estratégica de campaña
+- Portal ONPE embebido con resultados históricos EG 2021
 
 #### 10. Eventos (`/admin/eventos`)
 - **Calendario de Google integrado** (dra.mirella.camapaza.4@gmail.com)
