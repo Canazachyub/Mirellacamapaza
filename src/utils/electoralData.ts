@@ -424,6 +424,34 @@ export const ORGANIZACIONES_SOCIALES: OrganizacionSocial[] = [
   // INST. EDUCATIVA (2)
   { categoria: 'Inst. Educativa', nombre: 'Universidad Nacional del Altiplano', direccion: 'Av. Ejército N° 329, Ciudad Universitaria', telefono: '352206', email: '', facebookWeb: '', descripcion: 'Universidad pública' },
   { categoria: 'Inst. Educativa', nombre: 'Universidad Andina Néstor Cáceres Velásquez', direccion: 'Ed. El Camping 3º Piso, Pasaje de La Cultura Plaza de Armas, Juliaca', telefono: '322213', email: '', facebookWeb: '', descripcion: 'Universidad privada' },
+  // SERVICIOS LOCALES (1)
+  { categoria: 'Servicios Locales', nombre: 'Carwash Rapidin', direccion: '', telefono: '+51 990 444 430', email: '', facebookWeb: '', descripcion: 'Servicio de lavado de vehículos' },
+  // DIRIGENTES ACORA (16)
+  { categoria: 'Dirigentes Acora', nombre: 'Epifanio Amigo', direccion: 'Acora', telefono: '+51 987 404 519', email: '', facebookWeb: '', descripcion: 'Dirigente de Acora' },
+  { categoria: 'Dirigentes Acora', nombre: 'Jayme - Mototaxi Acora', direccion: 'Acora', telefono: '+51 931 594 720', email: '', facebookWeb: '', descripcion: 'Dirigente mototaxista de Acora' },
+  { categoria: 'Dirigentes Acora', nombre: 'Erika Anahua', direccion: 'Acora', telefono: '+51 916 444 310', email: '', facebookWeb: '', descripcion: 'Dirigente de Acora' },
+  { categoria: 'Dirigentes Acora', nombre: 'Belardino Quispe', direccion: 'Acora - Caritamaya', telefono: '+51 994 946 102', email: '', facebookWeb: '', descripcion: 'Dirigente de Caritamaya' },
+  { categoria: 'Dirigentes Acora', nombre: 'Magna - Personero', direccion: 'Acora - Ccopamaya', telefono: '+51 950 442 628', email: '', facebookWeb: '', descripcion: 'Personera de Ccopamaya' },
+  { categoria: 'Dirigentes Acora', nombre: 'Demetrio Mamani', direccion: 'Acora - Caritamaya', telefono: '+51 974 621 305', email: '', facebookWeb: '', descripcion: 'Dirigente de Caritamaya' },
+  { categoria: 'Dirigentes Acora', nombre: 'Moises Mamani', direccion: 'Acora - Culta', telefono: '+51 997 441 559', email: '', facebookWeb: '', descripcion: 'Dirigente de Culta' },
+  { categoria: 'Dirigentes Acora', nombre: 'Lidia Paredes', direccion: 'Acora - C.P. Totorani Pirco', telefono: '+51 963 535 205', email: '', facebookWeb: '', descripcion: 'Dirigente de C.P. Totorani Pirco' },
+  { categoria: 'Dirigentes Acora', nombre: 'Dirigente Centro Pucara', direccion: 'Acora - Centro Pucara', telefono: '+51 945 402 540', email: '', facebookWeb: '', descripcion: 'Dirigente de Centro Pucara' },
+  { categoria: 'Dirigentes Acora', nombre: 'Evo Apomayta', direccion: 'Acora', telefono: '+51 914 698 440', email: '', facebookWeb: '', descripcion: 'Regidor de Acora' },
+  { categoria: 'Dirigentes Acora', nombre: 'Ruben - C.P. Jayu Jayu', direccion: 'Acora - C.P. Jayu Jayu', telefono: '+51 944 281 097', email: '', facebookWeb: '', descripcion: 'Dirigente de C.P. Jayu Jayu' },
+  { categoria: 'Dirigentes Acora', nombre: 'Amadeo Mamani', direccion: 'Acora', telefono: '+51 988 583 101', email: '', facebookWeb: '', descripcion: 'Presidente de Tenientes Gobernadores' },
+  { categoria: 'Dirigentes Acora', nombre: 'Guillermo Checalla', direccion: 'Acora - C.P. Totorani', telefono: '+51 975 045 862', email: '', facebookWeb: '', descripcion: 'Presidente de Barrio - C.P. Totorani' },
+  { categoria: 'Dirigentes Acora', nombre: 'Fayfer Chohuanca', direccion: 'Acora', telefono: '+51 950 875 362', email: '', facebookWeb: '', descripcion: 'Dirigente UANCV' },
+  { categoria: 'Dirigentes Acora', nombre: 'Augusto Markasqueña', direccion: 'Acora', telefono: '+51 951 029 318', email: '', facebookWeb: '', descripcion: 'Dirigente de Acora' },
+  { categoria: 'Dirigentes Acora', nombre: 'Alcalde C.P. Tunco', direccion: 'Acora - C.P. Tunco', telefono: '+51 969 283 185', email: '', facebookWeb: '', descripcion: 'Alcalde del Centro Poblado Tunco' },
+  // DIRIGENTES SALCEDO (8)
+  { categoria: 'Dirigentes Salcedo', nombre: 'Elías Tancara', direccion: 'Salcedo', telefono: '+51 994 253 484', email: '', facebookWeb: '', descripcion: 'Dirigente de Salcedo' },
+  { categoria: 'Dirigentes Salcedo', nombre: 'Carmen Chambi', direccion: 'Salcedo - Centro Poblado', telefono: '+51 914 067 665', email: '', facebookWeb: '', descripcion: 'Dirigente de Centro Poblado' },
+  { categoria: 'Dirigentes Salcedo', nombre: 'Hugo - Capullani', direccion: 'Salcedo - Capullani', telefono: '+51 951 923 479', email: '', facebookWeb: '', descripcion: 'Construcción Civil' },
+  { categoria: 'Dirigentes Salcedo', nombre: 'Yaneth Copari', direccion: 'Salcedo', telefono: '+51 952 311 573', email: '', facebookWeb: '', descripcion: 'Dirigente de Salcedo' },
+  { categoria: 'Dirigentes Salcedo', nombre: 'José Luis - Regidor', direccion: 'Salcedo', telefono: '+51 923 092 858', email: '', facebookWeb: '', descripcion: 'Regidor de Salcedo' },
+  { categoria: 'Dirigentes Salcedo', nombre: 'Nancy - Regidora', direccion: 'Salcedo', telefono: '+51 944 753 159', email: '', facebookWeb: '', descripcion: 'Regidora de Salcedo' },
+  { categoria: 'Dirigentes Salcedo', nombre: 'Henry Sumari', direccion: 'Salcedo - Urb. Los Andes', telefono: '+51 921 077 506', email: '', facebookWeb: '', descripcion: 'Dirigente Urb. Los Andes' },
+  { categoria: 'Dirigentes Salcedo', nombre: 'Maquera - Tricitaxi', direccion: 'Salcedo', telefono: '+51 956 664 879', email: '', facebookWeb: '', descripcion: 'Dirigente tricitaxista' },
 ];
 
 // Función para calcular estadísticas por provincia
