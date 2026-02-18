@@ -247,8 +247,8 @@ const DocumentsSection = () => {
   }
 
   return (
-    <section className="py-16 lg:py-24 bg-white">
-      <div className="container-custom">
+    <section className="py-16 lg:py-24 bg-white overflow-hidden">
+      <div className="container-custom overflow-hidden">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -298,18 +298,20 @@ const DocumentsSection = () => {
                       transition={{ delay: docIndex * 0.05 }}
                     >
                       <Card className="hover:shadow-lg transition-shadow h-full">
-                        <div className="flex items-start gap-4">
-                          {doc.thumbnail ? (
-                            <img
-                              src={doc.thumbnail}
-                              alt={doc.name}
-                              className="w-12 h-12 object-cover rounded-lg"
-                            />
-                          ) : (
-                            getFileIcon(doc.mimeType)
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-medium text-secondary-900 truncate">
+                        <div className="flex items-start gap-4 overflow-hidden">
+                          <div className="flex-shrink-0">
+                            {doc.thumbnail ? (
+                              <img
+                                src={doc.thumbnail}
+                                alt={doc.name}
+                                className="w-12 h-12 object-cover rounded-lg"
+                              />
+                            ) : (
+                              getFileIcon(doc.mimeType)
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0 overflow-hidden">
+                            <h4 className="font-medium text-secondary-900 truncate break-all">
                               {formatFileName(doc.name)}
                             </h4>
                             <p className="text-sm text-secondary-500 mt-1">

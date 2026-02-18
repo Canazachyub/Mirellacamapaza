@@ -31,7 +31,7 @@ import {
   ORGANIZACIONES_SOCIALES,
 } from '@/utils/electoralData';
 
-type Tab = 'historico' | 'electores' | 'medios' | 'organizaciones' | 'onpe';
+type Tab = 'historico' | 'electores' | 'medios' | 'organizaciones' | 'onpe' | 'candidatos';
 
 const Strategy = () => {
   const [activeTab, setActiveTab] = useState<Tab>('historico');
@@ -43,6 +43,7 @@ const Strategy = () => {
     { key: 'medios' as Tab, label: 'Medios', icon: Radio },
     { key: 'organizaciones' as Tab, label: 'Organizaciones', icon: Building2 },
     { key: 'onpe' as Tab, label: 'ONPE Histórico', icon: Globe },
+    { key: 'candidatos' as Tab, label: 'Candidatos Puno', icon: Users },
   ];
 
   const partidoColors: Record<string, string> = {
@@ -492,6 +493,39 @@ const Strategy = () => {
                 <iframe
                   src="https://resultadoshistorico.onpe.gob.pe/EG2021/"
                   title="ONPE Resultados Historicos 2021"
+                  className="w-full h-full"
+                  style={{ border: 'none' }}
+                />
+              </div>
+              <p className="text-xs text-secondary-400 mt-2 text-center">
+                Si el contenido no carga, usa el enlace de arriba para abrir en nueva ventana.
+              </p>
+            </Card>
+          </motion.div>
+        )}
+        {/* TAB: Candidatos Puno */}
+        {activeTab === 'candidatos' && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+            <Card>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-secondary-900 flex items-center gap-2">
+                  <Users className="w-5 h-5 text-primary-600" />
+                  Base de Datos - Candidatos a Diputados por Puno
+                </h3>
+                <a
+                  href="https://canazachyub.github.io/Candidatospuno/consulta/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-sm text-primary-600 hover:underline"
+                >
+                  Abrir en nueva ventana
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
+              <div className="rounded-lg overflow-hidden border border-secondary-200" style={{ height: '700px' }}>
+                <iframe
+                  src="https://canazachyub.github.io/Candidatospuno/consulta/"
+                  title="Candidatos a Diputados por Puno"
                   className="w-full h-full"
                   style={{ border: 'none' }}
                 />
