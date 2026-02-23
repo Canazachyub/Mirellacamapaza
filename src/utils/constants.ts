@@ -425,6 +425,22 @@ export const ESTADOS_MENSAJE = ['Nuevo', 'Leido', 'Respondido', 'Archivado'] as 
 export const ESTADOS_AFILIADO = ['Pendiente', 'Verificado', 'Activo', 'Inactivo'] as const;
 export const ESTADOS_VOLUNTARIO = ['Activo', 'Inactivo', 'Pendiente'] as const;
 export const ESTADOS_EVENTO = ['Programado', 'EnCurso', 'Finalizado', 'Cancelado'] as const;
+export const ESTADOS_PERSONERO = ['Pendiente', 'Aprobado', 'Activo', 'Inactivo', 'Rechazado'] as const;
+
+// Países para votación en el extranjero
+export const PAISES = [
+  'Argentina', 'Bolivia', 'Brasil', 'Chile', 'Colombia', 'Ecuador',
+  'Paraguay', 'Uruguay', 'Venezuela', 'México', 'Estados Unidos',
+  'Canadá', 'España', 'Italia', 'Francia', 'Alemania', 'Reino Unido',
+  'Japón', 'China', 'Australia', 'Otro',
+] as const;
+
+// Tipos de experiencia para personeros
+export const TIPOS_EXPERIENCIA_PERSONERO = [
+  'Personero en elecciones pasadas',
+  'Observador electoral',
+  'Otro',
+] as const;
 
 // Navegación pública
 export const NAV_ITEMS: NavItem[] = [
@@ -433,6 +449,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Propuestas', href: '/propuestas' },
   { label: 'Galería', href: '/galeria' },
   { label: 'Sedes', href: '/sedes' },
+  { label: 'Personeros', href: '/personeros' },
   { label: 'Contacto', href: '/contacto' },
 ];
 
@@ -444,6 +461,7 @@ export const DASHBOARD_NAV: NavItem[] = [
   { label: 'Mensajes', href: '/admin/mensajes', icon: 'MessageSquare' },
   { label: 'Afiliados', href: '/admin/afiliados', icon: 'Users' },
   { label: 'Voluntarios', href: '/admin/voluntarios', icon: 'UserPlus' },
+  { label: 'Personeros', href: '/admin/personeros', icon: 'Shield' },
   { label: 'Archivos', href: '/admin/archivos', icon: 'FolderOpen' },
   { label: 'Galería', href: '/admin/galeria', icon: 'Image' },
   { label: 'Equipos', href: '/admin/equipos', icon: 'UsersRound' },

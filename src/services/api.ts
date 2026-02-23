@@ -17,6 +17,8 @@ import type {
   BaseTerritorial,
   BaseStats,
   BaseFormData,
+  Personero,
+  PersoneroFormData,
 } from '@/types';
 
 // URL de la API - siempre usa URL directa (Google Apps Script maneja CORS)
@@ -406,3 +408,70 @@ export const updateBase = (id: string, data: Partial<BaseFormData>) =>
   post<void>('updateBase', { id, ...data });
 
 export const deleteBase = (id: string) => post<void>('deleteBase', { id });
+
+// ============================================
+// PERSONEROS DE MESA
+// ============================================
+
+export interface GetPersonerosParams {
+  page?: number;
+  limit?: number;
+  estado?: string;
+  tipoUbicacion?: string;
+  region?: string;
+  provincia?: string;
+  search?: string;
+}
+
+export const getPersoneros = (params?: GetPersonerosParams) => {
+  const queryParams: Record<string, string> = {};
+  if (params?.page) queryParams.page = String(params.page);
+  if (params?.limit) queryParams.limit = String(params.limit);
+  if (params?.estado) queryParams.estado = params.estado;
+  if (params?.tipoUbicacion) queryParams.tipoUbicacion = params.tipoUbicacion;
+  if (params?.region) queryParams.region = params.region;
+  if (params?.provincia) queryParams.provincia = params.provincia;
+  if (params?.search) queryParams.search = params.search;
+  return get<Personero[]>('getPersoneros', queryParams);
+};
+
+export const getPersonero = (id: string) => get<Personero>('getPersonero', { id });
+
+const transformPersoneroData = (data: PersoneroFormData) => {
+  const formatDate = (dateStr: string | undefined): string => {
+    if (!dateStr) return '';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+    if (dateStr.includes('T')) return dateStr.split('T')[0];
+    return dateStr;
+  };
+
+  return {
+    DNI: data.dni,
+    Nombres: data.nombres,
+    ApellidoPaterno: data.apellidoPaterno,
+    ApellidoMaterno: data.apellidoMaterno,
+    FechaNacimiento: formatDate(data.fechaNacimiento),
+    Telefono: data.telefono || '',
+    Email: data.email || '',
+    TipoUbicacion: data.tipoUbicacion,
+    Region: data.region || '',
+    Provincia: data.provincia || '',
+    Distrito: data.distrito || '',
+    Pais: data.pais || '',
+    CiudadExterior: data.ciudadExterior || '',
+    GrupoVotacion: data.grupoVotacion || '',
+    Referente: data.referente || '',
+    EsAfiliado: data.esAfiliado ? 'Sí' : 'No',
+    TieneExperiencia: data.tieneExperiencia ? 'Sí' : 'No',
+    TipoExperiencia: data.tipoExperiencia || '',
+    DetalleExperiencia: data.detalleExperiencia || '',
+  };
+};
+
+export const addPersonero = (data: PersoneroFormData) =>
+  post<{ id: string }>('addPersonero', transformPersoneroData(data));
+
+export const updatePersonero = (id: string, data: Partial<Personero>) =>
+  post<void>('updatePersonero', { id, ...data });
+
+export const deletePersonero = (id: string) => post<void>('deletePersonero', { id });

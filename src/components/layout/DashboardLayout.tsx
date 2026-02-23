@@ -19,6 +19,7 @@ import {
   Brain,
   Map,
   Swords,
+  Shield,
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { useAuthStore } from '@/store/authStore';
@@ -40,6 +41,7 @@ const iconMap: Record<string, React.ElementType> = {
   Brain,
   Map,
   Swords,
+  Shield,
 };
 
 interface DashboardLayoutProps {

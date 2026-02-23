@@ -327,3 +327,52 @@ export interface BaseFormData {
   prioridad: 'Alta' | 'Media' | 'Baja';
   notas?: string;
 }
+
+// Personero de Mesa (Fiscalizador Electoral)
+export interface Personero {
+  ID: string;
+  Fecha: string;
+  DNI: string;
+  Nombres: string;
+  ApellidoPaterno: string;
+  ApellidoMaterno: string;
+  FechaNacimiento: string;
+  Telefono: string;
+  Email: string;
+  TipoUbicacion: 'Nacional' | 'Extranjero';
+  Region: string;
+  Provincia: string;
+  Distrito: string;
+  Pais: string;
+  CiudadExterior: string;
+  GrupoVotacion: string;
+  Referente: string;
+  EsAfiliado: string;
+  TieneExperiencia: string;
+  TipoExperiencia: string;
+  DetalleExperiencia: string;
+  Estado: 'Pendiente' | 'Aprobado' | 'Activo' | 'Inactivo' | 'Rechazado';
+}
+
+// Formulario de Personero
+export interface PersoneroFormData {
+  dni: string;
+  nombres: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+  fechaNacimiento: string;
+  telefono?: string;
+  email?: string;
+  tipoUbicacion: 'Nacional' | 'Extranjero';
+  region?: string;
+  provincia?: string;
+  distrito?: string;
+  pais?: string;
+  ciudadExterior?: string;
+  grupoVotacion?: string;
+  referente?: string;
+  esAfiliado: boolean;
+  tieneExperiencia: boolean;
+  tipoExperiencia?: string;
+  detalleExperiencia?: string;
+}

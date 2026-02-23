@@ -25,6 +25,7 @@ const SHEETS = {
   TASKS: 'Tareas',
   SENTIMENTS: 'Sentimientos',  // Análisis de sentimientos
   BASES_TERRITORIALES: 'Bases_Territoriales',  // Tracking de bases y responsables por zona
+  PERSONEROS: 'Personeros',  // Personeros de mesa
 };
 
 // ============================================
@@ -111,6 +112,13 @@ function doGet(e) {
         break;
       case 'getBaseStats':
         result = getBaseStats();
+        break;
+      // ====== PERSONEROS DE MESA ======
+      case 'getPersoneros':
+        result = getPersoneros(e.parameter);
+        break;
+      case 'getPersonero':
+        result = getPersoneroById(e.parameter.id);
         break;
       // ==============================
       default:
@@ -228,6 +236,16 @@ function doPost(e) {
         break;
       case 'deleteBase':
         result = deleteBase(data);
+        break;
+      // ====== PERSONEROS DE MESA ======
+      case 'addPersonero':
+        result = addPersonero(data);
+        break;
+      case 'updatePersonero':
+        result = updatePersonero(data);
+        break;
+      case 'deletePersonero':
+        result = deletePersonero(data);
         break;
       // ==============================
       default:
@@ -2326,6 +2344,276 @@ function createBasesSheet() {
     sheet.setColumnWidth(14, 250); // Notas
 
     Logger.log('Hoja Bases_Territoriales creada exitosamente');
+  }
+
+  return sheet;
+}
+
+// ============================================
+// PERSONEROS DE MESA
+// ============================================
+
+function getPersoneros(params) {
+  const sheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID).getSheetByName(SHEETS.PERSONEROS);
+
+  if (!sheet) {
+    createPersonerosSheet();
+    return { success: true, data: [], total: 0, pending: 0, active: 0 };
+  }
+
+  const data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return { success: true, data: [], total: 0, pending: 0, active: 0 };
+
+  const headers = data[0];
+  let personeros = data.slice(1).map((row) => rowToObject(headers, row));
+
+  // Filtros
+  if (params.estado) {
+    personeros = personeros.filter((p) => p.Estado === params.estado);
+  }
+  if (params.tipoUbicacion) {
+    personeros = personeros.filter((p) => p.TipoUbicacion === params.tipoUbicacion);
+  }
+  if (params.region) {
+    personeros = personeros.filter((p) => p.Region === params.region);
+  }
+  if (params.provincia) {
+    personeros = personeros.filter((p) => p.Provincia === params.provincia);
+  }
+  if (params.search) {
+    const search = params.search.toLowerCase();
+    personeros = personeros.filter(
+      (p) =>
+        (p.Nombres && p.Nombres.toString().toLowerCase().includes(search)) ||
+        (p.ApellidoPaterno && p.ApellidoPaterno.toString().toLowerCase().includes(search)) ||
+        (p.ApellidoMaterno && p.ApellidoMaterno.toString().toLowerCase().includes(search)) ||
+        (p.DNI && p.DNI.toString().includes(search)) ||
+        (p.GrupoVotacion && p.GrupoVotacion.toString().includes(search))
+    );
+  }
+
+  // Ordenar por fecha (más recientes primero)
+  personeros.sort((a, b) => new Date(b.Fecha) - new Date(a.Fecha));
+
+  // Stats
+  const allPersoneros = data.slice(1).map((row) => rowToObject(headers, row));
+  const pending = allPersoneros.filter(p => p.Estado === 'Pendiente').length;
+  const active = allPersoneros.filter(p => p.Estado === 'Aprobado' || p.Estado === 'Activo').length;
+
+  // Paginación
+  const page = parseInt(params.page) || 1;
+  const limit = parseInt(params.limit) || 50;
+  const start = (page - 1) * limit;
+  const paginatedData = personeros.slice(start, start + limit);
+
+  return {
+    success: true,
+    data: paginatedData,
+    total: personeros.length,
+    page,
+    limit,
+    totalPages: Math.ceil(personeros.length / limit),
+    pending,
+    active,
+  };
+}
+
+function getPersoneroById(id) {
+  const sheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID).getSheetByName(SHEETS.PERSONEROS);
+  if (!sheet) return { success: false, error: 'Hoja Personeros no encontrada' };
+
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === id) {
+      return { success: true, data: rowToObject(headers, data[i]) };
+    }
+  }
+
+  return { success: false, error: 'Personero no encontrado' };
+}
+
+function addPersonero(data) {
+  let sheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID).getSheetByName(SHEETS.PERSONEROS);
+
+  if (!sheet) {
+    createPersonerosSheet();
+    sheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID).getSheetByName(SHEETS.PERSONEROS);
+  }
+
+  const id = 'PER-' + Date.now();
+  const timestamp = new Date();
+
+  // Verificar DNI duplicado
+  const existingData = sheet.getDataRange().getValues();
+  const dniToCheck = (data.DNI || data.dni || '').toString();
+  if (dniToCheck) {
+    for (let i = 1; i < existingData.length; i++) {
+      if (existingData[i][2] && existingData[i][2].toString() === dniToCheck) {
+        return { success: false, error: 'Este DNI ya está registrado como personero' };
+      }
+    }
+  }
+
+  const row = [
+    id,                                                    // 1. ID
+    timestamp,                                             // 2. Fecha
+    data.DNI || data.dni || '',                            // 3. DNI
+    data.Nombres || data.nombres || '',                    // 4. Nombres
+    data.ApellidoPaterno || data.apellidoPaterno || '',    // 5. ApellidoPaterno
+    data.ApellidoMaterno || data.apellidoMaterno || '',    // 6. ApellidoMaterno
+    data.FechaNacimiento || data.fechaNacimiento || '',    // 7. FechaNacimiento
+    data.Telefono || data.telefono || '',                  // 8. Telefono
+    data.Email || data.email || '',                        // 9. Email
+    data.TipoUbicacion || data.tipoUbicacion || 'Nacional', // 10. TipoUbicacion
+    data.Region || data.region || '',                      // 11. Region
+    data.Provincia || data.provincia || '',                // 12. Provincia
+    data.Distrito || data.distrito || '',                  // 13. Distrito
+    data.Pais || data.pais || '',                          // 14. Pais
+    data.CiudadExterior || data.ciudadExterior || '',      // 15. CiudadExterior
+    data.GrupoVotacion || data.grupoVotacion || '',        // 16. GrupoVotacion
+    data.Referente || data.referente || '',                // 17. Referente
+    data.EsAfiliado || data.esAfiliado || 'No',           // 18. EsAfiliado
+    data.TieneExperiencia || data.tieneExperiencia || 'No', // 19. TieneExperiencia
+    data.TipoExperiencia || data.tipoExperiencia || '',    // 20. TipoExperiencia
+    data.DetalleExperiencia || data.detalleExperiencia || '', // 21. DetalleExperiencia
+    'Pendiente',                                           // 22. Estado
+  ];
+
+  sheet.appendRow(row);
+
+  return {
+    success: true,
+    message: '¡Registro exitoso! Gracias por ser personero de mesa.',
+    id: id,
+  };
+}
+
+function updatePersonero(data) {
+  const sheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID).getSheetByName(SHEETS.PERSONEROS);
+  if (!sheet) return { success: false, error: 'Hoja Personeros no encontrada' };
+
+  const allData = sheet.getDataRange().getValues();
+  const headers = allData[0];
+
+  for (let i = 1; i < allData.length; i++) {
+    if (allData[i][0] === data.id) {
+      const colMap = {};
+      headers.forEach((h, idx) => { colMap[h] = idx; });
+
+      const fields = [
+        'DNI', 'Nombres', 'ApellidoPaterno', 'ApellidoMaterno', 'FechaNacimiento',
+        'Telefono', 'Email', 'TipoUbicacion', 'Region', 'Provincia', 'Distrito',
+        'Pais', 'CiudadExterior', 'GrupoVotacion', 'Referente', 'EsAfiliado',
+        'TieneExperiencia', 'TipoExperiencia', 'DetalleExperiencia', 'Estado',
+      ];
+
+      fields.forEach(function(field) {
+        var lowerField = field.charAt(0).toLowerCase() + field.slice(1);
+        if (data[field] !== undefined || data[lowerField] !== undefined) {
+          var value = data[field] !== undefined ? data[field] : data[lowerField];
+          if (colMap[field] !== undefined) {
+            sheet.getRange(i + 1, colMap[field] + 1).setValue(value);
+          }
+        }
+      });
+
+      return { success: true, message: 'Personero actualizado correctamente' };
+    }
+  }
+
+  return { success: false, error: 'Personero no encontrado' };
+}
+
+function deletePersonero(data) {
+  const sheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID).getSheetByName(SHEETS.PERSONEROS);
+  if (!sheet) return { success: false, error: 'Hoja Personeros no encontrada' };
+
+  const allData = sheet.getDataRange().getValues();
+
+  for (let i = 1; i < allData.length; i++) {
+    if (allData[i][0] === (data.id || data.ID)) {
+      sheet.deleteRow(i + 1);
+      return { success: true, message: 'Personero eliminado correctamente' };
+    }
+  }
+
+  return { success: false, error: 'Personero no encontrado' };
+}
+
+function createPersonerosSheet() {
+  const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+  let sheet = ss.getSheetByName(SHEETS.PERSONEROS);
+
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEETS.PERSONEROS);
+
+    const headers = [
+      'ID', 'Fecha', 'DNI', 'Nombres', 'ApellidoPaterno', 'ApellidoMaterno',
+      'FechaNacimiento', 'Telefono', 'Email', 'TipoUbicacion', 'Region',
+      'Provincia', 'Distrito', 'Pais', 'CiudadExterior', 'GrupoVotacion',
+      'Referente', 'EsAfiliado', 'TieneExperiencia', 'TipoExperiencia',
+      'DetalleExperiencia', 'Estado'
+    ];
+
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
+    sheet.getRange(1, 1, 1, headers.length).setBackground('#4285f4');
+    sheet.getRange(1, 1, 1, headers.length).setFontColor('#ffffff');
+
+    // Validación: TipoUbicacion (columna J)
+    var tipoUbicacionRule = SpreadsheetApp.newDataValidation()
+      .requireValueInList(['Nacional', 'Extranjero'], true)
+      .build();
+    sheet.getRange('J2:J1000').setDataValidation(tipoUbicacionRule);
+
+    // Validación: EsAfiliado (columna R)
+    var esAfiliadoRule = SpreadsheetApp.newDataValidation()
+      .requireValueInList(['Sí', 'No'], true)
+      .build();
+    sheet.getRange('R2:R1000').setDataValidation(esAfiliadoRule);
+
+    // Validación: TieneExperiencia (columna S)
+    var tieneExpRule = SpreadsheetApp.newDataValidation()
+      .requireValueInList(['Sí', 'No'], true)
+      .build();
+    sheet.getRange('S2:S1000').setDataValidation(tieneExpRule);
+
+    // Validación: Estado (columna V)
+    var estadoRule = SpreadsheetApp.newDataValidation()
+      .requireValueInList(['Pendiente', 'Aprobado', 'Activo', 'Inactivo', 'Rechazado'], true)
+      .build();
+    sheet.getRange('V2:V1000').setDataValidation(estadoRule);
+
+    // Anchos de columna
+    sheet.setColumnWidth(1, 120);   // ID
+    sheet.setColumnWidth(2, 100);   // Fecha
+    sheet.setColumnWidth(3, 90);    // DNI
+    sheet.setColumnWidth(4, 150);   // Nombres
+    sheet.setColumnWidth(5, 130);   // ApellidoPaterno
+    sheet.setColumnWidth(6, 130);   // ApellidoMaterno
+    sheet.setColumnWidth(7, 110);   // FechaNacimiento
+    sheet.setColumnWidth(8, 110);   // Telefono
+    sheet.setColumnWidth(9, 180);   // Email
+    sheet.setColumnWidth(10, 100);  // TipoUbicacion
+    sheet.setColumnWidth(11, 120);  // Region
+    sheet.setColumnWidth(12, 120);  // Provincia
+    sheet.setColumnWidth(13, 120);  // Distrito
+    sheet.setColumnWidth(14, 120);  // Pais
+    sheet.setColumnWidth(15, 150);  // CiudadExterior
+    sheet.setColumnWidth(16, 120);  // GrupoVotacion
+    sheet.setColumnWidth(17, 150);  // Referente
+    sheet.setColumnWidth(18, 80);   // EsAfiliado
+    sheet.setColumnWidth(19, 100);  // TieneExperiencia
+    sheet.setColumnWidth(20, 200);  // TipoExperiencia
+    sheet.setColumnWidth(21, 250);  // DetalleExperiencia
+    sheet.setColumnWidth(22, 100);  // Estado
+
+    // Congelar fila de encabezado
+    sheet.setFrozenRows(1);
+
+    Logger.log('Hoja Personeros creada exitosamente');
   }
 
   return sheet;

@@ -12,6 +12,7 @@ const Locations = lazy(() => import('@/pages/public/Locations'));
 const Proposals = lazy(() => import('@/pages/public/Proposals'));
 const About = lazy(() => import('@/pages/public/About'));
 const Gallery = lazy(() => import('@/pages/public/Gallery'));
+const PersonerosPage = lazy(() => import('@/pages/public/Personeros'));
 
 // Auth Pages
 const Login = lazy(() => import('@/pages/auth/Login'));
@@ -31,6 +32,7 @@ const DashboardSocialMedia = lazy(() => import('@/pages/dashboard/SocialMedia'))
 const DashboardSentiments = lazy(() => import('@/pages/dashboard/Sentiments'));
 const DashboardElectoralMap = lazy(() => import('@/pages/dashboard/ElectoralMap'));
 const DashboardStrategy = lazy(() => import('@/pages/dashboard/Strategy'));
+const DashboardPersoneros = lazy(() => import('@/pages/dashboard/Personeros'));
 
 // Loading component
 const PageLoader = () => (
@@ -63,6 +65,7 @@ function App() {
         <Route path="/propuestas" element={<Proposals />} />
         <Route path="/conoceme" element={<About />} />
         <Route path="/galeria" element={<Gallery />} />
+        <Route path="/personeros" element={<PersonerosPage />} />
 
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
@@ -89,6 +92,14 @@ function App() {
           element={
             <ProtectedRoute>
               <DashboardVolunteers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/personeros"
+          element={
+            <ProtectedRoute>
+              <DashboardPersoneros />
             </ProtectedRoute>
           }
         />
