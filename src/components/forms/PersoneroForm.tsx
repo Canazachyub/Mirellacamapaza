@@ -221,32 +221,32 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 md:space-y-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-5 mb-6 text-white shadow-lg">
-        <div className="flex justify-between items-start">
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-5 sm:p-6 text-white shadow-lg">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
           <div>
-            <h3 className="text-xl font-bold tracking-wide">REGISTRO DE PERSONEROS DE MESA</h3>
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold tracking-wide">REGISTRO DE PERSONEROS DE MESA</h3>
             <p className="text-blue-100 font-medium mt-1">Elecciones Generales 2026</p>
           </div>
           <div className="bg-white/20 px-3 py-1 rounded-full">
             <p className="text-xs font-medium">Ahora Nación</p>
           </div>
         </div>
-        <div className="mt-4 bg-white/10 rounded-lg p-3">
-          <p className="text-sm text-blue-50 leading-relaxed">
+        <div className="mt-4 bg-white/10 rounded-lg p-3 sm:p-4">
+          <p className="text-sm sm:text-base text-blue-50 leading-relaxed">
             Regístrate como <strong>personero de mesa</strong> y ayuda a garantizar la transparencia del proceso electoral. Tu presencia es clave para defender cada voto.
           </p>
         </div>
-        <div className="mt-3 flex items-center gap-2 text-blue-100 text-xs">
-          <AlertCircle className="w-4 h-4" />
+        <div className="mt-3 flex items-center gap-2 text-blue-100 text-xs sm:text-sm">
+          <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>Los campos marcados con <span className="text-yellow-300 font-bold">*</span> son obligatorios</span>
         </div>
       </div>
 
       {/* SECCIÓN 1: DATOS PERSONALES */}
-      <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-        <h4 className="text-base font-bold text-gray-800 mb-5 pb-3 border-b-2 border-blue-100 flex items-center gap-2">
+      <div className="bg-white border-2 border-gray-200 rounded-xl p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
+        <h4 className="text-base md:text-lg font-bold text-gray-800 mb-5 pb-3 border-b-2 border-blue-100 flex items-center gap-2">
           <div className="bg-blue-100 p-2 rounded-lg">
             <User className="w-5 h-5 text-blue-600" />
           </div>
@@ -255,14 +255,15 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
 
         {/* DNI con botón Validar */}
         <div className="mb-5">
-          <label className="block text-sm font-medium text-gray-700 mb-1">DNI *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">DNI *</label>
           <div className="flex gap-2">
             <div className="flex-1">
               <input
                 type="text"
+                inputMode="numeric"
                 placeholder="12345678"
                 maxLength={8}
-                className={`w-full px-3 py-2.5 border-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white transition-colors ${
+                className={`w-full px-3 sm:px-4 py-3 text-base border-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white transition-colors ${
                   errors.dni ? 'border-red-300' : 'border-gray-200'
                 }`}
                 {...register('dni')}
@@ -271,24 +272,24 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
             <button
               type="button"
               onClick={handleValidateDNI}
-              className="px-4 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2 whitespace-nowrap"
+              className="px-4 sm:px-5 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2 whitespace-nowrap text-sm sm:text-base"
             >
               <Search className="w-4 h-4" />
               Validar
             </button>
           </div>
           {errors.dni?.message && (
-            <p className="text-sm text-red-500 mt-1">{errors.dni.message}</p>
+            <p className="text-sm text-red-500 mt-1.5">{errors.dni.message}</p>
           )}
           {dniValidated && !errors.dni && (
-            <p className="text-sm text-green-600 mt-1 flex items-center gap-1">
+            <p className="text-sm text-green-600 mt-1.5 flex items-center gap-1">
               <CheckCircle className="w-3 h-3" /> DNI validado: Complete los datos manualmente
             </p>
           )}
         </div>
 
         {/* Nombres, Apellido Paterno, Apellido Materno */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-5">
           <Input
             label="Nombres *"
             placeholder="Ej: Juan Carlos"
@@ -301,16 +302,18 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
             error={errors.apellidoPaterno?.message}
             {...register('apellidoPaterno')}
           />
-          <Input
-            label="Apellido Materno *"
-            placeholder="Ej: López"
-            error={errors.apellidoMaterno?.message}
-            {...register('apellidoMaterno')}
-          />
+          <div className="sm:col-span-2 md:col-span-1">
+            <Input
+              label="Apellido Materno *"
+              placeholder="Ej: López"
+              error={errors.apellidoMaterno?.message}
+              {...register('apellidoMaterno')}
+            />
+          </div>
         </div>
 
         {/* Fecha Nacimiento, Teléfono, Email */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           <Input
             label="Fecha de Nacimiento *"
             type="date"
@@ -321,27 +324,30 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
           <Input
             label="Teléfono"
             placeholder="987654321"
+            inputMode="tel"
             leftIcon={<Phone className="w-4 h-4" />}
             error={errors.telefono?.message}
             helperText="Opcional - formato: 9XXXXXXXX"
             maxLength={9}
             {...register('telefono')}
           />
-          <Input
-            label="Correo Electrónico"
-            type="email"
-            placeholder="tu@email.com"
-            leftIcon={<Mail className="w-4 h-4" />}
-            error={errors.email?.message}
-            helperText="Opcional"
-            {...register('email')}
-          />
+          <div className="sm:col-span-2 md:col-span-1">
+            <Input
+              label="Correo Electrónico"
+              type="email"
+              placeholder="tu@email.com"
+              leftIcon={<Mail className="w-4 h-4" />}
+              error={errors.email?.message}
+              helperText="Opcional"
+              {...register('email')}
+            />
+          </div>
         </div>
       </div>
 
       {/* SECCIÓN 2: UBICACIÓN DE VOTACIÓN */}
-      <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-        <h4 className="text-base font-bold text-gray-800 mb-5 pb-3 border-b-2 border-blue-100 flex items-center gap-2">
+      <div className="bg-white border-2 border-gray-200 rounded-xl p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
+        <h4 className="text-base md:text-lg font-bold text-gray-800 mb-5 pb-3 border-b-2 border-blue-100 flex items-center gap-2">
           <div className="bg-blue-100 p-2 rounded-lg">
             <MapPin className="w-5 h-5 text-blue-600" />
           </div>
@@ -355,11 +361,11 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
             control={control}
             name="tipoUbicacion"
             render={({ field }) => (
-              <div className="flex gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <label
-                  className={`flex-1 flex items-center justify-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  className={`flex items-center justify-center gap-2 sm:gap-3 p-3.5 sm:p-4 rounded-xl border-2 cursor-pointer transition-all ${
                     field.value === 'Nacional'
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-md'
                       : 'border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300'
                   }`}
                 >
@@ -373,13 +379,13 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
                       setValue('ciudadExterior', '');
                     }}
                   />
-                  <span className="text-2xl">🇵🇪</span>
-                  <span className="font-semibold">Nacional</span>
+                  <span className="text-xl sm:text-2xl">🇵🇪</span>
+                  <span className="font-semibold text-sm sm:text-base">Nacional</span>
                 </label>
                 <label
-                  className={`flex-1 flex items-center justify-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  className={`flex items-center justify-center gap-2 sm:gap-3 p-3.5 sm:p-4 rounded-xl border-2 cursor-pointer transition-all ${
                     field.value === 'Extranjero'
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-md'
                       : 'border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300'
                   }`}
                 >
@@ -394,8 +400,8 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
                       setValue('distrito', '');
                     }}
                   />
-                  <span className="text-2xl">🌍</span>
-                  <span className="font-semibold">Extranjero</span>
+                  <span className="text-xl sm:text-2xl">🌍</span>
+                  <span className="font-semibold text-sm sm:text-base">Extranjero</span>
                 </label>
               </div>
             )}
@@ -404,11 +410,11 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
 
         {/* Campos condicionales Nacional */}
         {tipoUbicacion === 'Nacional' && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Región *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Región *</label>
               <select
-                className={`w-full px-3 py-2.5 border-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white transition-colors ${
+                className={`w-full px-3 sm:px-4 py-3 text-base border-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white transition-colors ${
                   errors.region ? 'border-red-300' : 'border-gray-200'
                 }`}
                 {...register('region')}
@@ -420,7 +426,7 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
                 ))}
               </select>
               {errors.region?.message && (
-                <p className="text-sm text-red-500 mt-1">{errors.region.message}</p>
+                <p className="text-sm text-red-500 mt-1.5">{errors.region.message}</p>
               )}
             </div>
             <Select
@@ -431,18 +437,20 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
               {...register('provincia')}
               disabled={!selectedRegion}
             />
-            <Input
-              label="Distrito *"
-              placeholder="Ej: Juliaca"
-              error={errors.distrito?.message}
-              {...register('distrito')}
-            />
+            <div className="sm:col-span-2 md:col-span-1">
+              <Input
+                label="Distrito *"
+                placeholder="Ej: Juliaca"
+                error={errors.distrito?.message}
+                {...register('distrito')}
+              />
+            </div>
           </div>
         )}
 
         {/* Campos condicionales Extranjero */}
         {tipoUbicacion === 'Extranjero' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
             <Select
               label="País *"
               options={paisOptions}
@@ -462,19 +470,21 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
         )}
 
         {/* Grupo de Votación */}
-        <Input
-          label="Grupo de Votación (Mesa)"
-          placeholder="Ej. Mesa N° 012345"
-          leftIcon={<CreditCard className="w-4 h-4" />}
-          error={errors.grupoVotacion?.message}
-          helperText="Opcional - Si conoce su número de mesa"
-          {...register('grupoVotacion')}
-        />
+        <div className="max-w-md">
+          <Input
+            label="Grupo de Votación (Mesa)"
+            placeholder="Ej. Mesa N° 012345"
+            leftIcon={<CreditCard className="w-4 h-4" />}
+            error={errors.grupoVotacion?.message}
+            helperText="Opcional - Si conoce su número de mesa"
+            {...register('grupoVotacion')}
+          />
+        </div>
       </div>
 
       {/* SECCIÓN 3: REFERENTE Y EXPERIENCIA */}
-      <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-        <h4 className="text-base font-bold text-gray-800 mb-5 pb-3 border-b-2 border-blue-100 flex items-center gap-2">
+      <div className="bg-white border-2 border-gray-200 rounded-xl p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
+        <h4 className="text-base md:text-lg font-bold text-gray-800 mb-5 pb-3 border-b-2 border-blue-100 flex items-center gap-2">
           <div className="bg-blue-100 p-2 rounded-lg">
             <Briefcase className="w-5 h-5 text-blue-600" />
           </div>
@@ -482,7 +492,7 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
         </h4>
 
         {/* Referente */}
-        <div className="mb-5">
+        <div className="mb-5 max-w-lg">
           <Input
             label="Referente / Contacto"
             placeholder="Nombre de quien lo refiere"
@@ -498,9 +508,9 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
             control={control}
             name="esAfiliado"
             render={({ field }) => (
-              <label className="flex items-center gap-3 cursor-pointer group">
+              <label className="flex items-center gap-3 cursor-pointer group p-3 rounded-lg hover:bg-gray-50 transition-colors -mx-3">
                 <div
-                  className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${
+                  className={`w-7 h-7 rounded-md border-2 flex items-center justify-center transition-all flex-shrink-0 ${
                     field.value
                       ? 'bg-blue-600 border-blue-600'
                       : 'border-gray-300 group-hover:border-blue-400'
@@ -514,7 +524,7 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
                   checked={field.value}
                   onChange={(e) => field.onChange(e.target.checked)}
                 />
-                <span className="font-medium text-gray-700">Es Afiliado al partido</span>
+                <span className="font-medium text-gray-700 text-sm sm:text-base">Es Afiliado al partido</span>
               </label>
             )}
           />
@@ -523,9 +533,9 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
             control={control}
             name="tieneExperiencia"
             render={({ field }) => (
-              <label className="flex items-center gap-3 cursor-pointer group">
+              <label className="flex items-center gap-3 cursor-pointer group p-3 rounded-lg hover:bg-gray-50 transition-colors -mx-3">
                 <div
-                  className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${
+                  className={`w-7 h-7 rounded-md border-2 flex items-center justify-center transition-all flex-shrink-0 ${
                     field.value
                       ? 'bg-blue-600 border-blue-600'
                       : 'border-gray-300 group-hover:border-blue-400'
@@ -545,7 +555,7 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
                     }
                   }}
                 />
-                <span className="font-medium text-gray-700">Tiene Experiencia Previa</span>
+                <span className="font-medium text-gray-700 text-sm sm:text-base">Tiene Experiencia Previa</span>
               </label>
             )}
           />
@@ -553,7 +563,7 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
 
         {/* Campos condicionales de experiencia */}
         {tieneExperiencia && (
-          <div className="space-y-4 pl-4 border-l-4 border-blue-200">
+          <div className="space-y-4 pl-4 border-l-4 border-blue-200 max-w-lg">
             <Select
               label="Tipo de Experiencia *"
               options={experienciaOptions}
@@ -575,7 +585,7 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
       </div>
 
       {/* Acciones */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
         <Button
           type="button"
           variant="outline"
@@ -593,7 +603,7 @@ const PersoneroForm = ({ onSuccess }: PersoneroFormProps) => {
           fullWidth
           isLoading={mutation.isPending}
           leftIcon={<Shield className="w-5 h-5" />}
-          className="!bg-gradient-to-r !from-blue-600 !to-blue-700 hover:!from-blue-700 hover:!to-blue-800 !text-white !font-bold !py-4 !text-lg shadow-lg hover:shadow-xl transition-all"
+          className="!bg-gradient-to-r !from-blue-600 !to-blue-700 hover:!from-blue-700 hover:!to-blue-800 !text-white !font-bold !py-4 !text-base sm:!text-lg shadow-lg hover:shadow-xl transition-all"
         >
           {mutation.isPending ? 'Registrando...' : 'Registrar Personero'}
         </Button>
